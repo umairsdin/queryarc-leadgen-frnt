@@ -156,7 +156,7 @@ function CompetitorCard({ report }: { report: CanonicalReport }) {
             {pct}%
           </div>
           <p className="mt-1.5 text-xs text-muted-foreground">
-            {overall.num} of {overall.denom} eligible answers include a competitor
+            {count} of {overall.denom} eligible answers include a competitor
           </p>
         </div>
 
