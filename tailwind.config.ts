@@ -53,6 +53,12 @@ export default {
         "warm-bg": "hsl(var(--warm-bg))",
         "warm-card": "hsl(var(--warm-card))",
         "warm-border": "hsl(var(--warm-border))",
+        "metric-green": "hsl(var(--metric-green))",
+        "metric-amber": "hsl(var(--metric-amber))",
+        "metric-red": "hsl(var(--metric-red))",
+        "metric-blue": "hsl(var(--metric-blue))",
+        "surface-highlight": "hsl(var(--surface-highlight))",
+        "badge-bg": "hsl(var(--badge-bg))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
