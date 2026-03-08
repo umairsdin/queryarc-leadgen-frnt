@@ -52,7 +52,8 @@ export interface ReportSummary {
 export interface RateMetric {
   percent: number;
   count: number;
-  total: number;
+  total?: number;
+  denom?: number;
 }
 
 export interface CompetitorVisibilityItem {
