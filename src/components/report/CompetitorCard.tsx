@@ -79,10 +79,8 @@ export default function CompetitorCard({ report }: Props) {
   const evidence = report.resources?.evidence;
   const evidenceReady = isEvidenceAvailable(evidence);
 
-  if (!overall) return null;
-
-  const pct = overall.percent != null ? Math.round(overall.percent) : Math.round((overall.pct ?? 0) * 100);
-  const count = overall.count ?? overall.num ?? 0;
+  const pct = overall ? (overall.percent != null ? Math.round(overall.percent) : Math.round((overall.pct ?? 0) * 100)) : 0;
+  const count = overall ? (overall.count ?? overall.num ?? 0) : 0;
   const topRival = cp?.top_rival ?? fallback?.top_rival;
   const rows = cp?.rows ?? fallback?.rows;
 
