@@ -1,34 +1,45 @@
-// API response types for the AI Visibility report — matches /api/run/{run_id}
+// Canonical API response types — matches GET /api/run/{run_id}
 
-export interface ReportData {
-  run_id: string;
-  status: 'pending' | 'running' | 'complete' | 'failed';
+export interface CanonicalReport {
+  schema_version: string;
+  report_state: 'queued' | 'processing' | 'completed' | 'failed' | 'partial';
+  status: string;
+  readiness: Readiness;
+  run: { id: string };
+  input: ReportInput;
+  progress: ReportProgress;
+  summary: ReportSummary;
+  metrics: ReportMetrics;
+  sections: ReportSections;
+  resources: ReportResources;
+  data: ReportDataPayload;
+  narratives: ReportNarratives;
+  errors: ReportErrors;
+  field_contract: unknown;
+}
+
+export interface Readiness {
+  is_terminal: boolean;
+  is_ready_for_render: boolean;
+}
+
+export interface ReportInput {
   brand_name: string;
   website: string;
   competitors: string[];
-  models_attempted: string[];
-  error_message: string;
-  questions: string[];
-  answers: FlatAnswer[];
-  model_answers: ModelAnswerGroup[];
+}
 
-  // Analysis
-  visibility_rate: RateMetric;
-  competitor_visibility: CompetitorVisibilityItem[];
-  competitor_presence_card: CompetitorPresenceCard;
-  open_opportunity_rate: RateMetric;
-  opportunity_events: OpportunityEvent[];
-  opportunity_model_breakdown: Record<string, number>;
+export interface ReportProgress {
+  models_attempted?: string[];
+  [key: string]: unknown;
+}
 
-  // Display helpers
+export interface ReportSummary {
+  answers_analyzed: number;
   models_header: string;
-  helper_text: string;
-  top_insight: string;
-
-  // Narrative
-  what_this_means: WhatThisMeans;
-  action_oriented: ActionOriented;
-  cta_subline: string;
+  questions_tested: number;
+  top_competitor?: string;
+  [key: string]: unknown;
 }
 
 export interface RateMetric {
@@ -43,20 +54,83 @@ export interface CompetitorVisibilityItem {
   count: number;
 }
 
-export interface CompetitorPresenceCard {
-  brand_question_id: string;
-  exclusion_applied: boolean;
-  eligible_answer_count: number;
-  piggyback_overall: { pct: number; num: number; denom: number };
-  rows: PresenceRow[];
-  top_rival: { competitor: string; assistants_count: number; assistants_denom: number };
+export interface CompetitorPiggybackRate {
+  pct: number;
+  num: number;
+  denom: number;
+  top_rival?: {
+    competitor: string;
+    assistants_count: number;
+    assistants_denom: number;
+  };
+  rows?: PiggybackRow[];
 }
 
-export interface PresenceRow {
+export interface PiggybackRow {
   model: string;
   denom: number;
   piggyback_pct: number;
   competitor_pct: Record<string, number>;
+}
+
+export interface ReportMetrics {
+  visibility_rate: RateMetric;
+  competitor_piggyback_rate: CompetitorPiggybackRate;
+  open_opportunity_rate: RateMetric;
+  competitor_visibility: CompetitorVisibilityItem[];
+  opportunity_model_breakdown?: Record<string, number>;
+  [key: string]: unknown;
+}
+
+export interface ReportSections {
+  show_visibility_card: boolean;
+  show_competitor_card: boolean;
+  show_opportunity_card: boolean;
+  show_what_this_means: boolean;
+  show_action_block: boolean;
+  show_proof: boolean;
+  [key: string]: boolean;
+}
+
+export interface EvidenceResource {
+  ready: boolean;
+  state: string;
+  url_template?: string;
+}
+
+export interface ReportResources {
+  evidence: EvidenceResource;
+  [key: string]: unknown;
+}
+
+export interface HighlightSpan {
+  start: number;
+  end: number;
+  type: 'brand' | 'competitor';
+  name: string;
+}
+
+export interface ModelAnswerEntry {
+  question_id: number;
+  question: string;
+  answer_text: string;
+  status: string;
+  highlights: HighlightSpan[];
+}
+
+export interface ModelAnswerGroup {
+  model_key: string;
+  model: string;
+  status: string;
+  completed_count: number;
+  answers: ModelAnswerEntry[];
+}
+
+export interface ReportDataPayload {
+  questions?: string[];
+  model_answers?: ModelAnswerGroup[];
+  opportunity_events?: OpportunityEvent[];
+  [key: string]: unknown;
 }
 
 export interface OpportunityEvent {
@@ -78,34 +152,16 @@ export interface ActionOriented {
   bullets: string[];
 }
 
-export interface HighlightSpan {
-  start: number;
-  end: number;
-  type: 'brand' | 'competitor';
-  name: string;
+export interface ReportNarratives {
+  what_this_means?: WhatThisMeans;
+  action_oriented?: ActionOriented;
+  cta_subline?: string;
+  top_insight?: string;
+  [key: string]: unknown;
 }
 
-export interface FlatAnswer {
-  question_id: number;
-  question: string;
-  model: string;
-  answer_text: string;
-  recommended_brands: string[];
-  highlights: HighlightSpan[];
-}
-
-export interface ModelAnswerGroup {
-  model_key: string;
-  model: string;
-  status: string;
-  completed_count: number;
-  answers: ModelAnswerEntry[];
-}
-
-export interface ModelAnswerEntry {
-  question_id: number;
-  question: string;
-  answer_text: string;
-  status: string;
-  highlights: HighlightSpan[];
+export interface ReportErrors {
+  message?: string;
+  code?: string;
+  [key: string]: unknown;
 }

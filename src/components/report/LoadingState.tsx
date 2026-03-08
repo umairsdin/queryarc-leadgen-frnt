@@ -12,7 +12,7 @@ interface Props {
 }
 
 export default function LoadingState({ status }: Props) {
-  const activeIndex = status === 'running' ? 1 : 0;
+  const activeIndex = status === 'processing' ? 1 : 0;
 
   return (
     <div className="card-surface p-7">
