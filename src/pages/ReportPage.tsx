@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchRun } from '@/lib/api';
-import { ReportData } from '@/types/report';
+import { CanonicalReport } from '@/types/report';
 import ReportHeader from '@/components/report/ReportHeader';
 import LoadingState from '@/components/report/LoadingState';
 import FailedState from '@/components/report/FailedState';
@@ -14,20 +14,20 @@ import ProofSection from '@/components/report/ProofSection';
 export default function ReportPage() {
   const { run_id } = useParams<{ run_id: string }>();
   const navigate = useNavigate();
-  const [data, setData] = useState<ReportData | null>(null);
+  const [report, setReport] = useState<CanonicalReport | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const poll = useCallback(async () => {
     if (!run_id) return;
     try {
       const result = await fetchRun(run_id);
-      console.log('API response status:', result.status, 'keys:', Object.keys(result));
-      setData(result);
-      return result.status;
+      console.log('Canonical response:', result.report_state, result.readiness);
+      setReport(result);
+      return result;
     } catch (err) {
       console.error('Poll error:', err);
       setError('Failed to load report.');
-      return 'failed';
+      return null;
     }
   }, [run_id]);
 
@@ -36,9 +36,10 @@ export default function ReportPage() {
     let cancelled = false;
 
     const doPoll = async () => {
-      const status = await poll();
+      const result = await poll();
       if (cancelled) return;
-      if (status === 'pending' || status === 'running') {
+      // Keep polling until readiness.is_terminal
+      if (result && !result.readiness?.is_terminal) {
         timer = setTimeout(doPoll, 3000);
       }
     };
@@ -47,53 +48,60 @@ export default function ReportPage() {
     return () => { cancelled = true; clearTimeout(timer); };
   }, [poll]);
 
-  const isLoading = !data || data.status === 'pending' || data.status === 'running';
-  const isFailed = data?.status === 'failed' || !!error;
-  const isComplete = data?.status === 'complete';
+  const isLoading = !report || ['queued', 'processing'].includes(report.report_state);
+  const isFailed = report?.report_state === 'failed' || !!error;
+  const canRender = report?.readiness?.is_ready_for_render === true;
+  const sections = report?.sections;
 
   return (
     <div className="min-h-screen">
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-        <ReportHeader data={data} />
+        <ReportHeader report={report} />
 
         <AnimatePresence mode="wait">
           {isLoading && !isFailed && (
             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <LoadingState status={data?.status} />
+              <LoadingState status={report?.report_state} />
             </motion.div>
           )}
 
           {isFailed && (
             <motion.div key="failed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <FailedState
-                message={error || data?.error_message || 'Run failed.'}
+                message={error || report?.errors?.message || 'Run failed.'}
                 onBack={() => navigate('/ai-visibility')}
               />
             </motion.div>
           )}
 
-          {isComplete && data && (
+          {canRender && report && (
             <motion.div key="complete" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              {data.visibility_rate && (
-                <MetricCardSection data={data} />
-              )}
-
-              {data.what_this_means && (
-                <WhatThisMeansSection data={data.what_this_means} />
-              )}
-
-              {data.action_oriented && (
-                <ActionSectionBlock
-                  action={data.action_oriented}
-                  ctaSubline={data.cta_subline}
+              {sections?.show_visibility_card !== false && report.metrics && (
+                <MetricCardSection
+                  metrics={report.metrics}
+                  sections={sections!}
+                  brandName={report.input.brand_name}
+                  topInsight={report.narratives?.top_insight}
+                  opportunityEvents={report.data?.opportunity_events}
                 />
               )}
 
-              {(data.questions || data.model_answers) && (
+              {sections?.show_what_this_means && report.narratives?.what_this_means && (
+                <WhatThisMeansSection data={report.narratives.what_this_means} />
+              )}
+
+              {sections?.show_action_block && report.narratives?.action_oriented && (
+                <ActionSectionBlock
+                  action={report.narratives.action_oriented}
+                  ctaSubline={report.narratives.cta_subline}
+                />
+              )}
+
+              {sections?.show_proof && (report.data?.questions || report.data?.model_answers) && (
                 <ProofSection
-                  questions={data.questions}
-                  modelAnswers={data.model_answers}
-                  brandName={data.brand_name}
+                  questions={report.data.questions}
+                  modelAnswers={report.data.model_answers}
+                  brandName={report.input.brand_name}
                 />
               )}
             </motion.div>

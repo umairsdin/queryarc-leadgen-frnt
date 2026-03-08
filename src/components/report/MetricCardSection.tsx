@@ -1,33 +1,45 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Eye, Users, Target } from 'lucide-react';
-import { ReportData, CompetitorVisibilityItem, PresenceRow, OpportunityEvent } from '@/types/report';
+import {
+  ReportMetrics, ReportSections, CompetitorVisibilityItem,
+  PiggybackRow, OpportunityEvent
+} from '@/types/report';
 
 interface Props {
-  data: ReportData;
+  metrics: ReportMetrics;
+  sections: ReportSections;
+  brandName: string;
+  topInsight?: string;
+  opportunityEvents?: OpportunityEvent[];
 }
 
-export default function MetricCardSection({ data }: Props) {
+export default function MetricCardSection({ metrics, sections, brandName, topInsight, opportunityEvents }: Props) {
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
-        <VisibilityCard data={data} />
-      </motion.div>
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
-        <PresenceCard data={data} />
-      </motion.div>
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
-        <OpportunityCard data={data} />
-      </motion.div>
+      {sections.show_visibility_card !== false && (
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0 }}>
+          <VisibilityCard metrics={metrics} brandName={brandName} topInsight={topInsight} />
+        </motion.div>
+      )}
+      {sections.show_competitor_card && (
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
+          <CompetitorCard metrics={metrics} />
+        </motion.div>
+      )}
+      {sections.show_opportunity_card && (
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
+          <OpportunityCard metrics={metrics} opportunityEvents={opportunityEvents} />
+        </motion.div>
+      )}
     </div>
   );
 }
 
-// --- Card 1: Brand Visibility ---
-function VisibilityCard({ data }: { data: ReportData }) {
+function VisibilityCard({ metrics, brandName, topInsight }: { metrics: ReportMetrics; brandName: string; topInsight?: string }) {
   const [expanded, setExpanded] = useState(false);
-  const vr = data.visibility_rate;
-  const cv = data.competitor_visibility;
+  const vr = metrics.visibility_rate;
+  const cv = metrics.competitor_visibility;
 
   return (
     <div className="card-surface flex h-full flex-col p-5">
@@ -39,21 +51,17 @@ function VisibilityCard({ data }: { data: ReportData }) {
 
       <div className="mt-4">
         <div className="metric-large">{vr.percent}%</div>
-        <div className="mt-1 text-xs text-muted-foreground">{vr.count} of {vr.total} answers mention {data.brand_name}</div>
+        <div className="mt-1 text-xs text-muted-foreground">{vr.count} of {vr.total} answers mention {brandName}</div>
       </div>
 
-      {data.top_insight && (
+      {topInsight && (
         <p className="mt-3 rounded-md border border-border px-3 py-2 text-xs leading-relaxed text-muted-foreground">
-          {data.top_insight}
+          {topInsight}
         </p>
       )}
 
       {cv && cv.length > 0 && (
-        <ExpandableDetails
-          expanded={expanded}
-          onToggle={() => setExpanded(!expanded)}
-          label="competitor visibility"
-        >
+        <ExpandableDetails expanded={expanded} onToggle={() => setExpanded(!expanded)} label="competitor visibility">
           {cv.map((c: CompetitorVisibilityItem, i: number) => (
             <div key={i} className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground">{c.brand}</span>
@@ -66,13 +74,12 @@ function VisibilityCard({ data }: { data: ReportData }) {
   );
 }
 
-// --- Card 2: Competitor Presence ---
-function PresenceCard({ data }: { data: ReportData }) {
+function CompetitorCard({ metrics }: { metrics: ReportMetrics }) {
   const [expanded, setExpanded] = useState(false);
-  const cp = data.competitor_presence_card;
+  const cp = metrics.competitor_piggyback_rate;
   if (!cp) return null;
 
-  const pct = Math.round(cp.piggyback_overall.pct * 100);
+  const pct = Math.round(cp.pct * 100);
 
   return (
     <div className="card-surface flex h-full flex-col p-5">
@@ -85,7 +92,7 @@ function PresenceCard({ data }: { data: ReportData }) {
       <div className="mt-4">
         <div className="metric-large">{pct}%</div>
         <div className="mt-1 text-xs text-muted-foreground">
-          {cp.piggyback_overall.num} of {cp.piggyback_overall.denom} eligible answers include a competitor
+          {cp.num} of {cp.denom} eligible answers include a competitor
         </div>
       </div>
 
@@ -96,12 +103,8 @@ function PresenceCard({ data }: { data: ReportData }) {
       )}
 
       {cp.rows && cp.rows.length > 0 && (
-        <ExpandableDetails
-          expanded={expanded}
-          onToggle={() => setExpanded(!expanded)}
-          label="model breakdown"
-        >
-          {cp.rows.map((row: PresenceRow, i: number) => (
+        <ExpandableDetails expanded={expanded} onToggle={() => setExpanded(!expanded)} label="model breakdown">
+          {cp.rows.map((row: PiggybackRow, i: number) => (
             <div key={i} className="text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-medium text-foreground">{row.model}</span>
@@ -122,10 +125,9 @@ function PresenceCard({ data }: { data: ReportData }) {
   );
 }
 
-// --- Card 3: Open Opportunity ---
-function OpportunityCard({ data }: { data: ReportData }) {
+function OpportunityCard({ metrics, opportunityEvents }: { metrics: ReportMetrics; opportunityEvents?: OpportunityEvent[] }) {
   const [expanded, setExpanded] = useState(false);
-  const or = data.open_opportunity_rate;
+  const or = metrics.open_opportunity_rate;
 
   return (
     <div className="card-surface flex h-full flex-col p-5">
@@ -140,23 +142,19 @@ function OpportunityCard({ data }: { data: ReportData }) {
         <div className="mt-1 text-xs text-muted-foreground">{or.count} of {or.total} answers mention no brand</div>
       </div>
 
-      {data.opportunity_model_breakdown && (
-        <ExpandableDetails
-          expanded={expanded}
-          onToggle={() => setExpanded(!expanded)}
-          label="model breakdown"
-        >
-          {Object.entries(data.opportunity_model_breakdown).map(([model, count]) => (
+      {(metrics.opportunity_model_breakdown || opportunityEvents) && (
+        <ExpandableDetails expanded={expanded} onToggle={() => setExpanded(!expanded)} label="model breakdown">
+          {metrics.opportunity_model_breakdown && Object.entries(metrics.opportunity_model_breakdown).map(([model, count]) => (
             <div key={model} className="flex items-center justify-between text-xs">
               <span className="text-muted-foreground">{model}</span>
               <span className="font-medium text-foreground">{count as number} open</span>
             </div>
           ))}
 
-          {data.opportunity_events && data.opportunity_events.length > 0 && (
+          {opportunityEvents && opportunityEvents.length > 0 && (
             <div className="mt-2 space-y-2 border-t border-border pt-2">
               <p className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">Open answers</p>
-              {data.opportunity_events.map((ev: OpportunityEvent, i: number) => (
+              {opportunityEvents.map((ev, i) => (
                 <div key={i} className="rounded-md border border-border p-2.5 text-xs">
                   <div className="font-medium text-foreground">{ev.model}</div>
                   <p className="mt-0.5 text-muted-foreground line-clamp-2">{ev.buyer_label}</p>
@@ -170,7 +168,6 @@ function OpportunityCard({ data }: { data: ReportData }) {
   );
 }
 
-// --- Shared expandable wrapper ---
 function ExpandableDetails({ expanded, onToggle, label, children }: {
   expanded: boolean;
   onToggle: () => void;

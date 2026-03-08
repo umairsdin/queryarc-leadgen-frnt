@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
-import { ReportData } from '@/types/report';
+import { CanonicalReport } from '@/types/report';
 
 interface Props {
-  data: ReportData | null;
+  report: CanonicalReport | null;
 }
 
-export default function ReportHeader({ data }: Props) {
+export default function ReportHeader({ report }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -15,12 +15,14 @@ export default function ReportHeader({ data }: Props) {
       <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
         AI buyer visibility snapshot
       </h1>
-      {data?.brand_name && (
+      {report?.input?.brand_name && (
         <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">{data.brand_name}</span>
-          {data.website && <span>{data.website}</span>}
-          {data.questions?.length > 0 && <span>{data.questions.length} questions tested</span>}
-          {data.models_header && <span>{data.models_header}</span>}
+          <span className="font-medium text-foreground">{report.input.brand_name}</span>
+          {report.input.website && <span>{report.input.website}</span>}
+          {report.summary?.answers_analyzed > 0 && (
+            <span>{report.summary.answers_analyzed} answers analyzed</span>
+          )}
+          {report.summary?.models_header && <span>{report.summary.models_header}</span>}
         </div>
       )}
     </motion.div>
