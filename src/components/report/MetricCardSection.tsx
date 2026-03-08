@@ -12,7 +12,7 @@ export default function MetricCardSection({ report }: Props) {
   const sec = report.sections;
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {sec?.brand_visibility_card !== false && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}>
           <VisibilityCard report={report} />

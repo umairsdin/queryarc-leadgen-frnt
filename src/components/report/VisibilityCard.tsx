@@ -15,6 +15,12 @@ function getVisibilityBg(percent: number) {
   return 'bg-metric-red/10';
 }
 
+function getBarBg(percent: number) {
+  if (percent >= 60) return 'bg-metric-green';
+  if (percent >= 30) return 'bg-metric-amber';
+  return 'bg-metric-red';
+}
+
 function getTrendIcon(percent: number) {
   if (percent >= 60) return TrendingUp;
   if (percent >= 30) return Minus;
@@ -32,93 +38,82 @@ export default function VisibilityCard({ report }: { report: CanonicalReport }) 
 
   return (
     <div className="card-surface flex h-full flex-col overflow-hidden">
-      <div className={`h-1 w-full ${vr.percent >= 60 ? 'bg-metric-green' : vr.percent >= 30 ? 'bg-metric-amber' : 'bg-metric-red'}`} />
-      <div className="flex flex-col flex-1 p-5">
+      <div className={`h-1.5 w-full ${getBarBg(vr.percent)}`} />
+      <div className="flex flex-col flex-1 p-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Eye className="h-4 w-4 text-muted-foreground" />
-            <h3 className="text-sm font-semibold text-foreground">Brand visibility</h3>
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
+              <Eye className="h-4 w-4 text-foreground" />
+            </div>
+            <h3 className="text-sm font-bold text-foreground">Brand visibility</h3>
           </div>
-          <div className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${getVisibilityBg(vr.percent)} ${getVisibilityColor(vr.percent)}`}>
+          <div className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ${getVisibilityBg(vr.percent)} ${getVisibilityColor(vr.percent)}`}>
             <TrendIcon className="h-3 w-3" />
             {vr.percent >= 60 ? 'Strong' : vr.percent >= 30 ? 'Moderate' : 'Low'}
           </div>
         </div>
 
-        <div className="mt-5">
+        <div className="mt-6">
           <div className={`text-4xl font-bold tracking-tight ${getVisibilityColor(vr.percent)}`}>
             {vr.percent}%
           </div>
-          <p className="mt-1.5 text-xs text-muted-foreground">
+          <p className="mt-2 text-sm text-muted-foreground">
             {vr.count} of {vr.denom ?? vr.total} answers mention {report.input.brand_name}
           </p>
         </div>
 
-        <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-muted">
+        <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-secondary">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${vr.percent}%` }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className={`h-full rounded-full ${vr.percent >= 60 ? 'bg-metric-green' : vr.percent >= 30 ? 'bg-metric-amber' : 'bg-metric-red'}`}
+            className={`h-full rounded-full ${getBarBg(vr.percent)}`}
           />
         </div>
 
         {topInsight && (
-          <p className="mt-4 rounded-lg bg-surface-highlight px-3 py-2.5 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-5 rounded-lg bg-secondary border border-border p-3 text-sm leading-relaxed text-muted-foreground">
             {topInsight}
           </p>
         )}
 
         {cv && cv.length > 0 && (
-          <ExpandableDetails expanded={expanded} onToggle={() => setExpanded(!expanded)} label="competitor visibility">
-            {cv.map((c: CompetitorVisibilityItem, i: number) => (
-              <div key={i} className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">{c.brand}</span>
-                <div className="flex items-center gap-2">
-                  <div className="h-1.5 w-16 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full rounded-full bg-foreground/30" style={{ width: `${c.percent}%` }} />
+          <div className="mt-auto pt-5">
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-secondary hover:text-foreground"
+            >
+              <span>{expanded ? 'Hide' : 'View'} competitor visibility</span>
+              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+            </button>
+            <AnimatePresence>
+              {expanded && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-2 space-y-3 border-t border-border pt-4">
+                    {cv.map((c: CompetitorVisibilityItem, i: number) => (
+                      <div key={i} className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{c.brand}</span>
+                        <div className="flex items-center gap-3">
+                          <div className="h-2 w-20 overflow-hidden rounded-full bg-secondary">
+                            <div className="h-full rounded-full bg-foreground/20" style={{ width: `${c.percent}%` }} />
+                          </div>
+                          <span className="font-semibold text-foreground tabular-nums w-10 text-right">{c.percent}%</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <span className="font-semibold text-foreground tabular-nums w-8 text-right">{c.percent}%</span>
-                </div>
-              </div>
-            ))}
-          </ExpandableDetails>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function ExpandableDetails({ expanded, onToggle, label, children }: {
-  expanded: boolean;
-  onToggle: () => void;
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="mt-auto pt-4">
-      <button
-        onClick={onToggle}
-        className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-      >
-        <span>{expanded ? 'Hide' : 'View'} {label}</span>
-        <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
-      </button>
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="mt-2 space-y-2.5 border-t border-border pt-3">
-              {children}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

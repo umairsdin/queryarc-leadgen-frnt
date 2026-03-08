@@ -89,7 +89,6 @@ export default function CompetitorCard({ report }: Props) {
 
     const cellKey = `${model}::${competitor}`;
 
-    // Toggle off if same cell
     if (activeEvidence === cellKey) {
       setActiveEvidence(null);
       setEvidenceData(null);
@@ -117,46 +116,50 @@ export default function CompetitorCard({ report }: Props) {
     }
   }, [activeEvidence, evidenceReady, evidence?.url_template]);
 
-
   if (!overall) return null;
+
+  const barColor = pct >= 50 ? 'bg-metric-red' : pct >= 25 ? 'bg-metric-amber' : 'bg-metric-green';
+  const textColor = pct >= 50 ? 'text-metric-red' : pct >= 25 ? 'text-metric-amber' : 'text-metric-green';
 
   return (
     <div className="card-surface flex h-full flex-col overflow-hidden">
-      <div className={`h-1 w-full ${pct >= 50 ? 'bg-metric-red' : pct >= 25 ? 'bg-metric-amber' : 'bg-metric-green'}`} />
-      <div className="flex flex-col flex-1 p-5">
+      <div className={`h-1.5 w-full ${barColor}`} />
+      <div className="flex flex-col flex-1 p-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <h3 className="text-sm font-semibold text-foreground">Competitor presence</h3>
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
+              <Users className="h-4 w-4 text-foreground" />
+            </div>
+            <h3 className="text-sm font-bold text-foreground">Competitor presence</h3>
           </div>
           {pct >= 50 && (
-            <span className="rounded-full bg-metric-red/10 px-2 py-0.5 text-[10px] font-semibold text-metric-red">
+            <span className="rounded-full bg-metric-red/10 px-2.5 py-1 text-[11px] font-semibold text-metric-red">
               High risk
             </span>
           )}
         </div>
 
-        <div className="mt-5">
-          <div className={`text-4xl font-bold tracking-tight ${pct >= 50 ? 'text-metric-red' : pct >= 25 ? 'text-metric-amber' : 'text-metric-green'}`}>
+        <div className="mt-6">
+          <div className={`text-4xl font-bold tracking-tight ${textColor}`}>
             {pct}%
           </div>
-          <p className="mt-1.5 text-xs text-muted-foreground">
+          <p className="mt-2 text-sm text-muted-foreground">
             {count} of {overall.denom} eligible answers include a competitor
           </p>
         </div>
 
-        <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-muted">
+        <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-secondary">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className={`h-full rounded-full ${pct >= 50 ? 'bg-metric-red' : pct >= 25 ? 'bg-metric-amber' : 'bg-metric-green'}`}
+            className={`h-full rounded-full ${barColor}`}
           />
         </div>
 
         {topRival && (
-          <div className="mt-4 flex items-center gap-2 rounded-lg bg-metric-red/8 border border-metric-red/15 px-3 py-2.5 text-xs">
-            <Trophy className="h-3.5 w-3.5 text-metric-red shrink-0" />
+          <div className="mt-5 flex items-center gap-2.5 rounded-xl bg-metric-red/5 border border-metric-red/15 px-4 py-3 text-sm">
+            <Trophy className="h-4 w-4 text-metric-red shrink-0" />
             <div>
               <span className="text-muted-foreground">Most surfaced: </span>
               <span className="font-bold text-metric-red">{topRival.competitor}</span>
@@ -166,13 +169,13 @@ export default function CompetitorCard({ report }: Props) {
         )}
 
         {rows && rows.length > 0 && (
-          <div className="mt-auto pt-4">
+          <div className="mt-auto pt-5">
             <button
               onClick={() => setExpanded(!expanded)}
-              className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-secondary hover:text-foreground"
             >
               <span>{expanded ? 'Hide' : 'View'} competitor details</span>
-              <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
             </button>
             <AnimatePresence>
               {expanded && (
@@ -183,17 +186,17 @@ export default function CompetitorCard({ report }: Props) {
                   transition={{ duration: 0.2 }}
                   className="overflow-hidden"
                 >
-                  <div className="mt-2 space-y-3 border-t border-border pt-3">
+                  <div className="mt-2 space-y-4 border-t border-border pt-4">
                     {rows.map((row: PiggybackRow, i: number) => {
                       const rowPct = row.piggyback_pct > 1 ? Math.round(row.piggyback_pct) : Math.round(row.piggyback_pct * 100);
                       return (
-                        <div key={i} className="text-xs">
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-foreground">{row.model}</span>
+                        <div key={i} className="text-sm">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="font-semibold text-foreground">{row.model}</span>
                             <span className="text-muted-foreground tabular-nums">{rowPct}%</span>
                           </div>
                           {Object.entries(row.competitor_pct).some(([, v]) => v > 0) && (
-                            <div className="mt-1 flex flex-wrap gap-1.5">
+                            <div className="flex flex-wrap gap-2">
                               {Object.entries(row.competitor_pct).map(([name, val]) => {
                                 const v = val as number;
                                 const cellPct = v > 1 ? Math.round(v) : Math.round(v * 100);
@@ -206,7 +209,7 @@ export default function CompetitorCard({ report }: Props) {
                                   return (
                                     <span
                                       key={name}
-                                      className="rounded bg-muted px-1.5 py-0.5 text-muted-foreground/40 cursor-not-allowed text-[11px]"
+                                      className="rounded-md bg-secondary px-2 py-1 text-muted-foreground/40 cursor-not-allowed text-xs"
                                       title="No competitor mentions"
                                     >
                                       {name}: {cellPct}%
@@ -219,16 +222,16 @@ export default function CompetitorCard({ report }: Props) {
                                     key={name}
                                     onClick={() => handleEvidenceClick(row.model, name)}
                                     disabled={isLoading}
-                                    className={`rounded px-1.5 py-0.5 transition-all inline-flex items-center gap-1 text-[11px] ${
+                                    className={`rounded-md px-2 py-1 transition-all inline-flex items-center gap-1.5 text-xs font-medium ${
                                       isActive
-                                        ? 'bg-metric-red/20 text-metric-red ring-1 ring-metric-red/40 font-semibold shadow-sm'
+                                        ? 'bg-metric-red/15 text-metric-red ring-1 ring-metric-red/30 font-bold shadow-sm'
                                         : isClickable
-                                        ? 'bg-muted text-muted-foreground hover:bg-metric-red/10 hover:text-metric-red cursor-pointer font-medium'
-                                        : 'bg-muted text-muted-foreground/40 cursor-not-allowed'
+                                        ? 'bg-secondary text-foreground hover:bg-metric-red/10 hover:text-metric-red cursor-pointer'
+                                        : 'bg-secondary text-muted-foreground/40 cursor-not-allowed'
                                     } ${isLoading ? 'opacity-60 cursor-wait' : ''}`}
                                     title={isClickable ? `View evidence: ${name} in ${row.model}` : 'Evidence not available'}
                                   >
-                                    {isLoading && <Loader2 className="h-2.5 w-2.5 animate-spin" />}
+                                    {isLoading && <Loader2 className="h-3 w-3 animate-spin" />}
                                     {name}: {cellPct}%
                                   </button>
                                 );
@@ -251,39 +254,39 @@ export default function CompetitorCard({ report }: Props) {
                         transition={{ duration: 0.25 }}
                         className="overflow-hidden"
                       >
-                        <div className="mt-3 rounded-lg border border-metric-red/20 bg-metric-red/5 p-3">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-[11px] font-semibold text-metric-red">
+                        <div className="mt-4 rounded-xl border border-metric-red/20 bg-metric-red/5 p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-xs font-bold text-metric-red">
                               Evidence: {activeEvidence.replace('::', ' → ')}
                             </span>
                             <button
                               onClick={() => { setActiveEvidence(null); setEvidenceData(null); }}
-                              className="text-[10px] text-muted-foreground hover:text-foreground"
+                              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                             >
                               Close
                             </button>
                           </div>
 
                           {loadingEvidence === activeEvidence ? (
-                            <div className="flex items-center gap-2 py-4 justify-center text-xs text-muted-foreground">
-                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            <div className="flex items-center gap-2 py-6 justify-center text-sm text-muted-foreground">
+                              <Loader2 className="h-4 w-4 animate-spin" />
                               Loading evidence…
                             </div>
                           ) : evidenceData?.examples && evidenceData.examples.length > 0 ? (
                             <div className="space-y-3">
                               {evidenceData.examples.map((ex, idx) => (
-                                <div key={idx} className="rounded-md bg-background/80 border border-border p-2.5 text-xs">
-                                  <p className="font-medium text-foreground mb-1.5 leading-snug">
+                                <div key={idx} className="rounded-lg bg-background border border-border p-3.5 text-sm">
+                                  <p className="font-semibold text-foreground mb-2 leading-snug">
                                     Q: {ex.buyer_question}
                                   </p>
-                                  <p className="text-muted-foreground leading-relaxed">
+                                  <p className="text-muted-foreground leading-relaxed text-xs">
                                     {renderSnippetWithHighlights(ex.answer_text, ex.snippet_highlights)}
                                   </p>
                                 </div>
                               ))}
                             </div>
                           ) : evidenceData ? (
-                            <p className="text-xs text-muted-foreground py-2 text-center">
+                            <p className="text-sm text-muted-foreground py-3 text-center">
                               No evidence examples found for this combination.
                             </p>
                           ) : null}

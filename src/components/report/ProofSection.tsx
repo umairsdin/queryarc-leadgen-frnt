@@ -42,36 +42,41 @@ export default function ProofSection({ questions, modelAnswers, brandName }: Pro
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6, duration: 0.4 }}
-      className="card-surface mt-6 overflow-hidden"
+      className="card-surface mt-8 overflow-hidden"
     >
-      <div className="border-b border-border px-6 py-4 sm:px-7">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-metric-blue/10">
-            <FileText className="h-3.5 w-3.5 text-metric-blue" />
+      <div className="border-b border-border px-6 py-5 sm:px-8">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-metric-blue/10">
+            <FileText className="h-4.5 w-4.5 text-metric-blue" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-foreground">Proof from this snapshot</h3>
-            <p className="text-xs text-muted-foreground">Verbatim model outputs. <span className="rounded bg-metric-green/15 px-1 py-0.5 text-metric-green">Brand</span> and <span className="rounded bg-metric-red/15 px-1 py-0.5 text-metric-red">competitors</span> highlighted.</p>
+            <h3 className="text-lg font-bold text-foreground">Proof from this snapshot</h3>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Verbatim model outputs. <span className="rounded bg-metric-green/15 px-1.5 py-0.5 text-metric-green font-medium">Brand</span> and <span className="rounded bg-metric-red/15 px-1.5 py-0.5 text-metric-red font-medium">competitors</span> highlighted.
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="p-6 sm:p-7">
+      <div className="p-6 sm:p-8">
         {questions && questions.length > 0 && (
-          <div className="mb-6">
-            <h4 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+          <div className="mb-8">
+            <h4 className="text-label mb-3">
               Questions tested
             </h4>
-            <div className="space-y-2">
+            <p className="text-xs text-muted-foreground mb-4">
+              Snapshot note: only {questions.length} buyer question{questions.length !== 1 ? 's were' : ' was'} tested.
+            </p>
+            <div className="space-y-2.5">
               {questions.map((q, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -6 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.65 + i * 0.05 }}
-                  className="flex items-start gap-3 rounded-lg bg-surface-highlight p-3"
+                  className="flex items-start gap-3 rounded-xl bg-secondary border border-border p-3.5"
                 >
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-foreground text-[10px] font-bold text-background">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-primary text-[11px] font-bold text-primary-foreground">
                     {i + 1}
                   </span>
                   <span className="text-sm text-foreground leading-relaxed">{q}</span>
@@ -83,7 +88,7 @@ export default function ProofSection({ questions, modelAnswers, brandName }: Pro
 
         {modelAnswers && modelAnswers.length > 0 && (
           <div>
-            <h4 className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+            <h4 className="text-label mb-3">
               Select a model to view answers
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -91,10 +96,10 @@ export default function ProofSection({ questions, modelAnswers, brandName }: Pro
                 <button
                   key={m.model}
                   onClick={() => setSelectedModel(selectedModel === m.model ? null : m.model)}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  className={`rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
                     selectedModel === m.model
-                      ? 'bg-foreground text-background shadow-md'
-                      : 'bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground'
+                      ? 'bg-primary text-primary-foreground shadow-md'
+                      : 'bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground border border-border'
                   }`}
                 >
                   {m.model}
@@ -111,20 +116,20 @@ export default function ProofSection({ questions, modelAnswers, brandName }: Pro
                   transition={{ duration: 0.25 }}
                   className="overflow-hidden"
                 >
-                  <div className="mt-4 space-y-3">
+                  <div className="mt-5 space-y-3">
                     {activeModel.answers.map((qa, i) => (
                       <motion.div
                         key={i}
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.05 }}
-                        className="rounded-xl border border-border p-4 transition-colors hover:border-foreground/20"
+                        className="rounded-xl border border-border p-5 transition-colors hover:border-primary/20"
                       >
-                        <div className="flex items-start gap-2.5">
-                          <ChevronRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-metric-blue" />
+                        <div className="flex items-start gap-3">
+                          <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-foreground">{qa.question}</p>
-                            <p className="mt-2.5 whitespace-pre-wrap text-xs leading-[1.7] text-muted-foreground">
+                            <p className="text-sm font-semibold text-foreground leading-snug">{qa.question}</p>
+                            <p className="mt-3 whitespace-pre-wrap text-sm leading-[1.8] text-muted-foreground">
                               {renderHighlightedText(qa.answer_text, qa.highlights)}
                             </p>
                           </div>

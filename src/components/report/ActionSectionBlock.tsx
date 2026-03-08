@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Shield } from 'lucide-react';
+import { ArrowRight, Shield, Lock } from 'lucide-react';
 import { ActionOriented } from '@/types/report';
 
 interface Props {
@@ -9,7 +9,6 @@ interface Props {
 
 export default function ActionSectionBlock({ action, ctaSubline }: Props) {
   const handleCtaClick = () => {
-    // Open contact/upgrade flow or scroll to top as fallback
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -18,39 +17,41 @@ export default function ActionSectionBlock({ action, ctaSubline }: Props) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.4 }}
-      className="mt-6 overflow-hidden rounded-xl border border-foreground/10 bg-foreground text-primary-foreground"
+      className="mt-8 overflow-hidden rounded-2xl"
+      style={{ backgroundImage: 'var(--gradient-primary)' }}
     >
       <div className="grid gap-0 sm:grid-cols-5">
         <div className="border-b border-primary-foreground/10 p-6 sm:col-span-3 sm:border-b-0 sm:border-r sm:p-8">
-          <div className="flex items-center gap-2 mb-3">
-            <Shield className="h-4 w-4 text-primary-foreground/60" />
-            <span className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/60">Next step</span>
+          <div className="flex items-center gap-2 mb-4">
+            <Shield className="h-4.5 w-4.5 text-primary-foreground/70" />
+            <span className="text-xs font-bold uppercase tracking-widest text-primary-foreground/70">Next step</span>
           </div>
-          <h3 className="text-lg font-bold text-primary-foreground">{action.title}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-primary-foreground/70">{action.teaser}</p>
+          <h3 className="text-xl font-bold text-primary-foreground">{action.title}</h3>
+          <p className="mt-2.5 text-base leading-relaxed text-primary-foreground/75">{action.teaser}</p>
           <button
             onClick={handleCtaClick}
-            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary-foreground px-5 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-primary-foreground/90 active:scale-[0.98]"
+            className="mt-6 inline-flex items-center gap-2.5 rounded-xl bg-primary-foreground px-6 py-3 text-sm font-bold text-primary transition-all hover:bg-primary-foreground/90 hover:shadow-lg active:scale-[0.98]"
           >
+            <Lock className="h-4 w-4" />
             Get my full audit + fix plan
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-4 w-4" />
           </button>
         </div>
 
         <div className="p-6 sm:col-span-2 sm:p-8">
-          <h4 className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/60">What the audit covers</h4>
+          <h4 className="text-xs font-bold uppercase tracking-widest text-primary-foreground/70">What the audit covers</h4>
           {action.bullets && (
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-5 space-y-3">
               {action.bullets.map((b, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-sm leading-relaxed text-primary-foreground/80">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary-foreground/40" />
+                <li key={i} className="flex items-start gap-2.5 text-sm leading-relaxed text-primary-foreground/85">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-foreground/50" />
                   {b}
                 </li>
               ))}
             </ul>
           )}
           {ctaSubline && (
-            <p className="mt-4 text-xs italic text-primary-foreground/50">{ctaSubline}</p>
+            <p className="mt-5 text-sm italic text-primary-foreground/55">{ctaSubline}</p>
           )}
         </div>
       </div>

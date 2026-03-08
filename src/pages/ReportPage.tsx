@@ -10,6 +10,7 @@ import MetricCardSection from '@/components/report/MetricCardSection';
 import WhatThisMeansSection from '@/components/report/WhatThisMeansSection';
 import ActionSectionBlock from '@/components/report/ActionSectionBlock';
 import ProofSection from '@/components/report/ProofSection';
+import FinalCtaSection from '@/components/report/FinalCtaSection';
 
 export default function ReportPage() {
   const { run_id } = useParams<{ run_id: string }>();
@@ -57,7 +58,6 @@ export default function ReportPage() {
     setError(null);
     setReport(null);
     const cleanup = startPolling();
-    // Cleanup on next retry or unmount handled by effect
     return cleanup;
   }, [startPolling]);
 
@@ -68,15 +68,13 @@ export default function ReportPage() {
   const sec = report?.sections;
 
   return (
-    <div className="min-h-screen">
-      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-        {/* Header: gated by sections.header */}
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {(!sec || sec.header !== false) && (
           <ReportHeader report={report} />
         )}
 
         <AnimatePresence mode="wait">
-          {/* Progress block: gated by sections.progress */}
           {isLoading && !isFailed && (!sec || sec.progress !== false) && (
             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <LoadingState
@@ -87,7 +85,6 @@ export default function ReportPage() {
             </motion.div>
           )}
 
-          {/* Failed state with retry */}
           {isFailed && (
             <motion.div key="failed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <FailedState
@@ -99,18 +96,14 @@ export default function ReportPage() {
             </motion.div>
           )}
 
-          {/* Main report: render only when readiness.is_ready_for_render === true */}
           {canRender && report && (
             <motion.div key="complete" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              {/* Metric cards */}
               <MetricCardSection report={report} />
 
-              {/* What this means */}
               {sec?.what_this_means !== false && report.narratives?.what_this_means && (
                 <WhatThisMeansSection data={report.narratives.what_this_means} />
               )}
 
-              {/* CTA / Action block */}
               {(sec?.primary_cta !== false || sec?.final_cta !== false) && report.narratives?.action_oriented && (
                 <ActionSectionBlock
                   action={report.narratives.action_oriented}
@@ -118,13 +111,17 @@ export default function ReportPage() {
                 />
               )}
 
-              {/* Proof from snapshot */}
               {sec?.proof_from_snapshot !== false && (report.data?.questions || report.data?.model_answers) && (
                 <ProofSection
                   questions={report.data.questions}
                   modelAnswers={report.data.model_answers}
                   brandName={report.input.brand_name}
                 />
+              )}
+
+              {/* Final CTA - "Convert this snapshot into fixes" */}
+              {sec?.final_cta !== false && (
+                <FinalCtaSection ctaSubline={report.narratives?.cta_subline} />
               )}
             </motion.div>
           )}

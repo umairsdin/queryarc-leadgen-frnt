@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -25,6 +26,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          light: "hsl(var(--primary-light))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -50,13 +52,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "warm-bg": "hsl(var(--warm-bg))",
-        "warm-card": "hsl(var(--warm-card))",
-        "warm-border": "hsl(var(--warm-border))",
         "metric-green": "hsl(var(--metric-green))",
+        "metric-green-light": "hsl(var(--metric-green-light))",
         "metric-amber": "hsl(var(--metric-amber))",
+        "metric-amber-light": "hsl(var(--metric-amber-light))",
         "metric-red": "hsl(var(--metric-red))",
+        "metric-red-light": "hsl(var(--metric-red-light))",
         "metric-blue": "hsl(var(--metric-blue))",
+        "metric-blue-light": "hsl(var(--metric-blue-light))",
         "surface-highlight": "hsl(var(--surface-highlight))",
         "badge-bg": "hsl(var(--badge-bg))",
         sidebar: {
@@ -85,14 +88,14 @@ export default {
           to: { height: "0" },
         },
         "fade-in-up": {
-          from: { opacity: "0", transform: "translateY(12px)" },
+          from: { opacity: "0", transform: "translateY(16px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in-up": "fade-in-up 0.4s ease-out forwards",
+        "fade-in-up": "fade-in-up 0.5s ease-out forwards",
       },
     },
   },
