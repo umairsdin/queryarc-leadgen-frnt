@@ -23,6 +23,7 @@ export default function ReportPage() {
       const result = await fetchRun(run_id);
       console.log('Canonical response:', result.report_state, result.readiness);
       setReport(result);
+      setError(null);
       return result;
     } catch (err) {
       console.error('Poll error:', err);
@@ -31,14 +32,13 @@ export default function ReportPage() {
     }
   }, [run_id]);
 
-  useEffect(() => {
+  const startPolling = useCallback(() => {
     let timer: ReturnType<typeof setTimeout>;
     let cancelled = false;
 
     const doPoll = async () => {
       const result = await poll();
       if (cancelled) return;
-      // Rule 2: stop polling when readiness.is_terminal === true
       if (result && !result.readiness?.is_terminal) {
         timer = setTimeout(doPoll, 3000);
       }
@@ -48,13 +48,23 @@ export default function ReportPage() {
     return () => { cancelled = true; clearTimeout(timer); };
   }, [poll]);
 
-  // Rule 1: report_state is the primary lifecycle field
+  useEffect(() => {
+    const cleanup = startPolling();
+    return cleanup;
+  }, [startPolling]);
+
+  const handleRetry = useCallback(() => {
+    setError(null);
+    setReport(null);
+    const cleanup = startPolling();
+    // Cleanup on next retry or unmount handled by effect
+    return cleanup;
+  }, [startPolling]);
+
   const reportState = report?.report_state;
   const isLoading = !report || reportState === 'queued' || reportState === 'processing';
   const isFailed = reportState === 'failed' || !!error;
-  // Rule 3: render only when readiness.is_ready_for_render === true
   const canRender = report?.readiness?.is_ready_for_render === true;
-  // Rule 5: sections.* as authoritative render gate
   const sec = report?.sections;
 
   return (
@@ -66,7 +76,7 @@ export default function ReportPage() {
         )}
 
         <AnimatePresence mode="wait">
-          {/* Progress block: gated by sections.progress, shown while loading */}
+          {/* Progress block: gated by sections.progress */}
           {isLoading && !isFailed && (!sec || sec.progress !== false) && (
             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <LoadingState
@@ -77,29 +87,30 @@ export default function ReportPage() {
             </motion.div>
           )}
 
-          {/* Failed state: Rule 7 */}
+          {/* Failed state with retry */}
           {isFailed && (
             <motion.div key="failed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <FailedState
                 message={error || report?.run?.error_message || report?.errors?.message || 'Run failed.'}
                 code={report?.errors?.code}
                 onBack={() => navigate('/ai-visibility')}
+                onRetry={handleRetry}
               />
             </motion.div>
           )}
 
-          {/* Main report: Rule 3 + Rule 6 for partial */}
+          {/* Main report: render only when readiness.is_ready_for_render === true */}
           {canRender && report && (
             <motion.div key="complete" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               {/* Metric cards */}
               <MetricCardSection report={report} />
 
-              {/* What this means — show if section gate is true OR not explicitly false and data exists */}
+              {/* What this means */}
               {sec?.what_this_means !== false && report.narratives?.what_this_means && (
                 <WhatThisMeansSection data={report.narratives.what_this_means} />
               )}
 
-              {/* CTA / Action block — show if section gate allows and data exists */}
+              {/* CTA / Action block */}
               {(sec?.primary_cta !== false || sec?.final_cta !== false) && report.narratives?.action_oriented && (
                 <ActionSectionBlock
                   action={report.narratives.action_oriented}
@@ -107,7 +118,7 @@ export default function ReportPage() {
                 />
               )}
 
-              {/* Proof from snapshot — show if not explicitly gated off and data exists */}
+              {/* Proof from snapshot */}
               {sec?.proof_from_snapshot !== false && (report.data?.questions || report.data?.model_answers) && (
                 <ProofSection
                   questions={report.data.questions}

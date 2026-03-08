@@ -8,6 +8,11 @@ interface Props {
 }
 
 export default function ActionSectionBlock({ action, ctaSubline }: Props) {
+  const handleCtaClick = () => {
+    // Open contact/upgrade flow or scroll to top as fallback
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -23,7 +28,10 @@ export default function ActionSectionBlock({ action, ctaSubline }: Props) {
           </div>
           <h3 className="text-lg font-bold text-primary-foreground">{action.title}</h3>
           <p className="mt-2 text-sm leading-relaxed text-primary-foreground/70">{action.teaser}</p>
-          <button className="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary-foreground px-5 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-primary-foreground/90 active:scale-[0.98]">
+          <button
+            onClick={handleCtaClick}
+            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary-foreground px-5 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-primary-foreground/90 active:scale-[0.98]"
+          >
             Get my full audit + fix plan
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
