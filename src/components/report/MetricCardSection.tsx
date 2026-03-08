@@ -183,12 +183,14 @@ function CompetitorCard({ report }: { report: CanonicalReport }) {
               <div key={i} className="text-xs">
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-foreground">{row.model}</span>
-                  <span className="text-muted-foreground tabular-nums">{Math.round(row.piggyback_pct * 100)}%</span>
+                  <span className="text-muted-foreground tabular-nums">{row.piggyback_pct > 1 ? Math.round(row.piggyback_pct) : Math.round(row.piggyback_pct * 100)}%</span>
                 </div>
                 {Object.entries(row.competitor_pct).some(([, v]) => v > 0) && (
                   <div className="mt-0.5 flex flex-wrap gap-1.5 text-muted-foreground">
-                    {Object.entries(row.competitor_pct).filter(([, v]) => v > 0).map(([name, val]) => (
-                      <span key={name} className="rounded bg-muted px-1.5 py-0.5">{name}: {Math.round((val as number) * 100)}%</span>
+                    {Object.entries(row.competitor_pct).filter(([, v]) => v > 0).map(([name, val]) => {
+                      const v = val as number;
+                      return <span key={name} className="rounded bg-muted px-1.5 py-0.5">{name}: {v > 1 ? Math.round(v) : Math.round(v * 100)}%</span>;
+                    })}
                     ))}
                   </div>
                 )}
