@@ -21,6 +21,7 @@ export default function ReportPage() {
     if (!run_id) return;
     try {
       const result = await fetchRun(run_id);
+      console.log('API response:', JSON.stringify(result, null, 2));
       setData(result);
       return result.status;
     } catch {
