@@ -1,10 +1,26 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Users, Loader2, ExternalLink } from 'lucide-react';
+import { ChevronDown, Users, Loader2, Trophy } from 'lucide-react';
 import {
   CanonicalReport, CompetitorPresenceCard,
   PiggybackRow, EvidenceResource
 } from '@/types/report';
+
+interface EvidenceExample {
+  question_id: number;
+  buyer_question: string;
+  snippet: string;
+  snippet_highlights: { start: number; end: number; type: string }[];
+  answer_text: string;
+  model: string;
+}
+
+interface EvidenceData {
+  run_id: string;
+  model: string;
+  competitor: string;
+  examples: EvidenceExample[];
+}
 
 interface Props {
   report: CanonicalReport;
@@ -18,10 +34,44 @@ function isEvidenceAvailable(evidence?: EvidenceResource) {
   );
 }
 
+function renderSnippetWithHighlights(text: string, highlights: { start: number; end: number; type: string }[]) {
+  if (!highlights || highlights.length === 0) return <span>{text}</span>;
+
+  const sorted = [...highlights].sort((a, b) => a.start - b.start);
+  const parts: React.ReactNode[] = [];
+  let cursor = 0;
+
+  sorted.forEach((h, i) => {
+    if (h.start > cursor) {
+      parts.push(<span key={`t-${i}`}>{text.slice(cursor, h.start)}</span>);
+    }
+    parts.push(
+      <mark
+        key={`h-${i}`}
+        className={
+          h.type === 'competitor'
+            ? 'rounded bg-metric-red/15 px-0.5 font-semibold text-metric-red not-italic'
+            : 'rounded bg-metric-green/15 px-0.5 font-semibold text-metric-green not-italic'
+        }
+      >
+        {text.slice(h.start, h.end)}
+      </mark>
+    );
+    cursor = h.end;
+  });
+
+  if (cursor < text.length) {
+    parts.push(<span key="tail">{text.slice(cursor)}</span>);
+  }
+
+  return <>{parts}</>;
+}
+
 export default function CompetitorCard({ report }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [activeEvidence, setActiveEvidence] = useState<string | null>(null);
   const [loadingEvidence, setLoadingEvidence] = useState<string | null>(null);
+  const [evidenceData, setEvidenceData] = useState<EvidenceData | null>(null);
 
   const cp: CompetitorPresenceCard | undefined = report.data?.competitor_presence_card as CompetitorPresenceCard | undefined;
   const fallback = report.metrics?.competitor_piggyback_rate;
@@ -36,30 +86,38 @@ export default function CompetitorCard({ report }: Props) {
   const topRival = cp?.top_rival ?? fallback?.top_rival;
   const rows = cp?.rows ?? fallback?.rows;
 
-  const handleEvidenceClick = (model: string, competitor: string) => {
+  const handleEvidenceClick = useCallback(async (model: string, competitor: string) => {
     if (!evidenceReady || !evidence?.url_template) return;
 
     const cellKey = `${model}::${competitor}`;
 
-    // Toggle: clicking same cell closes it
+    // Toggle off if same cell
     if (activeEvidence === cellKey) {
       setActiveEvidence(null);
+      setEvidenceData(null);
       return;
     }
 
     setLoadingEvidence(cellKey);
-    // Build evidence URL from template
-    const url = evidence.url_template
-      .replace('{model}', encodeURIComponent(model))
-      .replace('{competitor}', encodeURIComponent(competitor));
+    setActiveEvidence(cellKey);
+    setEvidenceData(null);
 
-    // Simulate brief loading then show
-    setTimeout(() => {
-      setActiveEvidence(cellKey);
+    try {
+      const url = evidence.url_template
+        .replace('{model}', encodeURIComponent(model))
+        .replace('{competitor}', encodeURIComponent(competitor));
+
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed to fetch evidence');
+      const data: EvidenceData = await res.json();
+      setEvidenceData(data);
+    } catch (err) {
+      console.error('Evidence fetch error:', err);
+      setEvidenceData({ run_id: '', model, competitor, examples: [] });
+    } finally {
       setLoadingEvidence(null);
-      window.open(url, '_blank', 'noopener');
-    }, 400);
-  };
+    }
+  }, [activeEvidence, evidenceReady, evidence?.url_template]);
 
   return (
     <div className="card-surface flex h-full flex-col overflow-hidden">
@@ -96,10 +154,13 @@ export default function CompetitorCard({ report }: Props) {
         </div>
 
         {topRival && (
-          <div className="mt-4 rounded-lg bg-surface-highlight px-3 py-2.5 text-xs">
-            <span className="text-muted-foreground">Top rival: </span>
-            <span className="font-semibold text-foreground">{topRival.competitor}</span>
-            <span className="text-muted-foreground"> — in {topRival.assistants_count}/{topRival.assistants_denom} assistants</span>
+          <div className="mt-4 flex items-center gap-2 rounded-lg bg-metric-red/8 border border-metric-red/15 px-3 py-2.5 text-xs">
+            <Trophy className="h-3.5 w-3.5 text-metric-red shrink-0" />
+            <div>
+              <span className="text-muted-foreground">Most surfaced: </span>
+              <span className="font-bold text-metric-red">{topRival.competitor}</span>
+              <span className="text-muted-foreground"> — in {topRival.assistants_count}/{topRival.assistants_denom} assistants</span>
+            </div>
           </div>
         )}
 
@@ -139,13 +200,12 @@ export default function CompetitorCard({ report }: Props) {
                                 const isActive = activeEvidence === cellKey;
                                 const isLoading = loadingEvidence === cellKey;
                                 const isClickable = v > 0 && evidenceReady;
-                                const isDisabled = v === 0 || !evidenceReady;
 
                                 if (v === 0) {
                                   return (
                                     <span
                                       key={name}
-                                      className="rounded bg-muted px-1.5 py-0.5 text-muted-foreground/50 cursor-not-allowed"
+                                      className="rounded bg-muted px-1.5 py-0.5 text-muted-foreground/40 cursor-not-allowed text-[11px]"
                                       title="No competitor mentions"
                                     >
                                       {name}: {cellPct}%
@@ -157,19 +217,18 @@ export default function CompetitorCard({ report }: Props) {
                                   <button
                                     key={name}
                                     onClick={() => handleEvidenceClick(row.model, name)}
-                                    disabled={isLoading || isDisabled}
-                                    className={`rounded px-1.5 py-0.5 transition-all inline-flex items-center gap-1 ${
+                                    disabled={isLoading}
+                                    className={`rounded px-1.5 py-0.5 transition-all inline-flex items-center gap-1 text-[11px] ${
                                       isActive
-                                        ? 'bg-metric-red/20 text-metric-red ring-1 ring-metric-red/30'
+                                        ? 'bg-metric-red/20 text-metric-red ring-1 ring-metric-red/40 font-semibold shadow-sm'
                                         : isClickable
-                                        ? 'bg-muted text-muted-foreground hover:bg-metric-red/10 hover:text-metric-red cursor-pointer'
-                                        : 'bg-muted text-muted-foreground/50 cursor-not-allowed'
-                                    } ${isLoading ? 'opacity-60' : ''}`}
+                                        ? 'bg-muted text-muted-foreground hover:bg-metric-red/10 hover:text-metric-red cursor-pointer font-medium'
+                                        : 'bg-muted text-muted-foreground/40 cursor-not-allowed'
+                                    } ${isLoading ? 'opacity-60 cursor-wait' : ''}`}
                                     title={isClickable ? `View evidence: ${name} in ${row.model}` : 'Evidence not available'}
                                   >
                                     {isLoading && <Loader2 className="h-2.5 w-2.5 animate-spin" />}
                                     {name}: {cellPct}%
-                                    {isClickable && !isLoading && <ExternalLink className="h-2.5 w-2.5 opacity-50" />}
                                   </button>
                                 );
                               })}
@@ -179,6 +238,58 @@ export default function CompetitorCard({ report }: Props) {
                       );
                     })}
                   </div>
+
+                  {/* Inline evidence panel */}
+                  <AnimatePresence>
+                    {activeEvidence && (
+                      <motion.div
+                        key={activeEvidence}
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="mt-3 rounded-lg border border-metric-red/20 bg-metric-red/5 p-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-[11px] font-semibold text-metric-red">
+                              Evidence: {activeEvidence.replace('::', ' → ')}
+                            </span>
+                            <button
+                              onClick={() => { setActiveEvidence(null); setEvidenceData(null); }}
+                              className="text-[10px] text-muted-foreground hover:text-foreground"
+                            >
+                              Close
+                            </button>
+                          </div>
+
+                          {loadingEvidence === activeEvidence ? (
+                            <div className="flex items-center gap-2 py-4 justify-center text-xs text-muted-foreground">
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              Loading evidence…
+                            </div>
+                          ) : evidenceData?.examples && evidenceData.examples.length > 0 ? (
+                            <div className="space-y-3">
+                              {evidenceData.examples.map((ex, idx) => (
+                                <div key={idx} className="rounded-md bg-background/80 border border-border p-2.5 text-xs">
+                                  <p className="font-medium text-foreground mb-1.5 leading-snug">
+                                    Q: {ex.buyer_question}
+                                  </p>
+                                  <p className="text-muted-foreground leading-relaxed">
+                                    {renderSnippetWithHighlights(ex.answer_text, ex.snippet_highlights)}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          ) : evidenceData ? (
+                            <p className="text-xs text-muted-foreground py-2 text-center">
+                              No evidence examples found for this combination.
+                            </p>
+                          ) : null}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               )}
             </AnimatePresence>
