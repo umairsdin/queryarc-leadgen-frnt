@@ -60,64 +60,65 @@ export default function AIVisibilityPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        {/* Hero Section */}
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        {/* Hero */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 text-center"
+          transition={{ duration: 0.5 }}
+          className="mb-14 text-center"
         >
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-accent-foreground">
-            <Sparkles className="h-3.5 w-3.5" />
-            Instant snapshot • Free • No login required
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-border px-3.5 py-1 text-xs font-medium text-muted-foreground">
+            <Sparkles className="h-3 w-3" />
+            Instant snapshot · Free · No login required
           </div>
-          <h1 className="font-display text-4xl leading-tight text-foreground sm:text-5xl lg:text-6xl">
-            Your buyers may already be<br />
-            <span className="text-gradient">choosing competitors in AI</span>
+          <h1 className="text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+            Your buyers may already be
+            <br />
+            choosing competitors in AI answers
           </h1>
         </motion.div>
 
         <div className="grid gap-8 lg:grid-cols-5">
-          {/* Form Card - Left */}
+          {/* Form */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
             className="lg:col-span-2"
           >
-            <div className="card-elevated p-6 sm:p-8">
-              <h2 className="font-display text-2xl text-foreground">Check your AI visibility</h2>
+            <div className="card-surface-elevated p-6 sm:p-7">
+              <h2 className="text-lg font-medium text-foreground">Check your AI visibility</h2>
               <p className="mt-1 text-sm text-muted-foreground">See how AI assistants talk about your brand.</p>
 
-              <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <form onSubmit={handleSubmit} className="mt-5 space-y-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-foreground" htmlFor="brand_name">Brand name</label>
+                  <label className="mb-1 block text-sm font-medium text-foreground" htmlFor="brand_name">Brand name</label>
                   <input
                     id="brand_name"
                     type="text"
                     value={brandName}
                     onChange={e => setBrandName(e.target.value)}
-                    className="w-full rounded-md border border-input bg-card px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring"
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm transition-colors duration-150 placeholder:text-muted-foreground hover:border-foreground/20 focus-visible:border-foreground focus-visible:outline-none"
                   />
                   {errors.brand_name && <p className="mt-1 text-xs text-destructive">{errors.brand_name}</p>}
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-foreground" htmlFor="website">Brand website</label>
+                  <label className="mb-1 block text-sm font-medium text-foreground" htmlFor="website">Brand website</label>
                   <input
                     id="website"
                     type="text"
                     value={website}
                     onChange={e => setWebsite(e.target.value)}
-                    className="w-full rounded-md border border-input bg-card px-3 py-2.5 text-sm text-foreground outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring"
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm transition-colors duration-150 placeholder:text-muted-foreground hover:border-foreground/20 focus-visible:border-foreground focus-visible:outline-none"
                   />
                   {errors.website && <p className="mt-1 text-xs text-destructive">{errors.website}</p>}
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-foreground" htmlFor="competitors">
-                    Competitors <span className="text-muted-foreground">(optional, up to 3)</span>
+                  <label className="mb-1 block text-sm font-medium text-foreground" htmlFor="competitors">
+                    Competitors <span className="font-normal text-muted-foreground">(optional, up to 3)</span>
                   </label>
                   <textarea
                     id="competitors"
@@ -125,7 +126,7 @@ export default function AIVisibilityPage() {
                     onChange={e => setCompetitors(e.target.value)}
                     placeholder="Zendesk, Intercom, Freshdesk"
                     rows={3}
-                    className="w-full resize-none rounded-md border border-input bg-card px-3 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring"
+                    className="flex w-full resize-none rounded-md border border-input bg-transparent px-3 py-2 text-sm transition-colors duration-150 placeholder:text-muted-foreground hover:border-foreground/20 focus-visible:border-foreground focus-visible:outline-none"
                   />
                   {errors.competitors && <p className="mt-1 text-xs text-destructive">{errors.competitors}</p>}
                 </div>
@@ -135,25 +136,25 @@ export default function AIVisibilityPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 disabled:opacity-60"
+                  className="btn-primary flex w-full items-center justify-center gap-2 px-4 py-2 disabled:opacity-60"
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-                      Running...
+                      <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
+                      Running…
                     </span>
                   ) : (
                     <>
                       Get my AI visibility snapshot
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </>
                   )}
                 </button>
               </form>
 
-              {/* AI Models strip */}
-              <div className="mt-6 border-t border-border pt-4">
-                <p className="mb-3 text-xs font-medium text-muted-foreground">Analyzed across 5 AI assistants</p>
+              {/* AI Models */}
+              <div className="mt-5 border-t border-border pt-4">
+                <p className="mb-3 text-label">Analyzed across 5 AI assistants</p>
                 <div className="flex items-center gap-4">
                   {AI_MODELS.map(m => (
                     <div key={m.name} className="flex flex-col items-center gap-1">
@@ -174,24 +175,24 @@ export default function AIVisibilityPage() {
 
           {/* Right Content */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
             className="space-y-6 lg:col-span-3"
           >
             {/* Value Props */}
-            <div className="card-premium p-6 sm:p-8">
-              <div className="space-y-5">
+            <div className="card-surface p-6 sm:p-7">
+              <div className="space-y-4">
                 {VALUE_PROPS.map((p, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, x: 10 }}
+                    initial={{ opacity: 0, x: 8 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + i * 0.1 }}
+                    transition={{ delay: 0.35 + i * 0.08 }}
                     className="flex items-start gap-3"
                   >
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent">
-                      <p.icon className="h-4 w-4 text-primary" />
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border">
+                      <p.icon className="h-3.5 w-3.5 text-foreground" />
                     </div>
                     <p className="text-sm leading-relaxed text-foreground">{p.text}</p>
                   </motion.div>
@@ -199,36 +200,36 @@ export default function AIVisibilityPage() {
               </div>
             </div>
 
-            {/* Preview Card */}
-            <div className="card-premium p-6 sm:p-8">
-              <h3 className="font-display text-lg text-foreground">What your snapshot includes</h3>
-              <div className="mt-4 space-y-0 overflow-hidden rounded-lg border border-border">
+            {/* Preview */}
+            <div className="card-surface p-6 sm:p-7">
+              <h3 className="text-sm font-medium text-foreground">What your snapshot includes</h3>
+              <div className="mt-3 overflow-hidden rounded-md border border-border">
                 {PREVIEW_ITEMS.map((item, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between border-b border-border px-4 py-3 last:border-b-0"
+                    className="flex items-center justify-between border-b border-border px-3.5 py-2.5 text-sm last:border-b-0"
                   >
-                    <span className="text-sm text-muted-foreground">{item.label}</span>
-                    <span className="text-sm font-semibold text-foreground">{item.value}</span>
+                    <span className="text-muted-foreground">{item.label}</span>
+                    <span className="font-medium text-foreground">{item.value}</span>
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-xs text-muted-foreground">
+              <p className="mt-3 text-xs text-muted-foreground">
                 Snapshot also includes competitor visibility, model breakdowns, open opportunities, and deeper findings.
               </p>
             </div>
           </motion.div>
         </div>
 
-        {/* Bottom support section */}
+        {/* Bottom */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
+          transition={{ delay: 0.6 }}
           className="mx-auto mt-16 max-w-3xl text-center"
         >
-          <div className="card-premium p-8 sm:p-12">
-            <h2 className="font-display text-2xl text-foreground sm:text-3xl">
+          <div className="card-surface p-8 sm:p-10">
+            <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
               AI answers can redirect buyers before they ever reach your website
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">

@@ -12,24 +12,23 @@ interface Props {
 }
 
 export default function LoadingState({ status }: Props) {
-  // Simple step progression based on status
   const activeIndex = status === 'running' ? 1 : 0;
 
   return (
-    <div className="card-premium p-8">
-      <ul className="space-y-4">
+    <div className="card-surface p-7">
+      <ul className="space-y-3.5">
         {STEPS.map((step, i) => (
           <motion.li
             key={i}
-            initial={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.15 }}
+            transition={{ delay: i * 0.12 }}
             className="flex items-center gap-3"
           >
-            <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+            <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${
               i <= activeIndex
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted text-muted-foreground'
+                ? 'bg-foreground text-background'
+                : 'border border-border text-muted-foreground'
             }`}>
               {i < activeIndex ? '✓' : i + 1}
             </div>
@@ -39,7 +38,7 @@ export default function LoadingState({ status }: Props) {
               {step}
             </span>
             {i === activeIndex && (
-              <span className="h-1.5 w-1.5 animate-pulse-slow rounded-full bg-primary" />
+              <span className="h-1.5 w-1.5 animate-pulse-slow rounded-full bg-foreground" />
             )}
           </motion.li>
         ))}
