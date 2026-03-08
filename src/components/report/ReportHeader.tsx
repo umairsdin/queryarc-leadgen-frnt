@@ -6,25 +6,46 @@ interface Props {
 }
 
 export default function ReportHeader({ report }: Props) {
+  const input = report?.input;
+  const summary = report?.summary;
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -8 }}
+    <motion.header
+      initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="card-surface-elevated mb-8 p-6 sm:p-7"
+      transition={{ duration: 0.5 }}
+      className="mb-10"
     >
-      <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-        AI buyer visibility snapshot
+      <div className="flex items-center gap-3 mb-2">
+        <div className="h-8 w-1 rounded-full bg-foreground" />
+        <span className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+          AI Visibility Report
+        </span>
+      </div>
+
+      <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        {input?.brand_name || 'Loading…'}
       </h1>
-      {report?.input?.brand_name && (
-        <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">{report.input.brand_name}</span>
-          {report.input.website && <span>{report.input.website}</span>}
-          {report.summary?.answers_analyzed > 0 && (
-            <span>{report.summary.answers_analyzed} answers analyzed</span>
+
+      {input && (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {input.website && (
+            <span className="rounded-full bg-badge-bg px-3 py-1 text-xs font-medium text-muted-foreground">
+              {input.website}
+            </span>
           )}
-          {report.summary?.models_header && <span>{report.summary.models_header}</span>}
+          {summary?.answers_analyzed != null && summary.answers_analyzed > 0 && (
+            <span className="rounded-full bg-badge-bg px-3 py-1 text-xs font-medium text-muted-foreground">
+              {summary.answers_analyzed} answers analyzed
+            </span>
+          )}
+          {summary?.models_header && (
+            <span className="rounded-full bg-badge-bg px-3 py-1 text-xs font-medium text-muted-foreground">
+              {summary.models_header}
+            </span>
+          )}
         </div>
       )}
-    </motion.div>
+    </motion.header>
   );
 }

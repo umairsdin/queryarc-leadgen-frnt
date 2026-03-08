@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Loader2 } from 'lucide-react';
 
 const STEPS = [
   'Generating buyer questions',
@@ -14,44 +15,54 @@ interface Props {
 }
 
 export default function LoadingState({ reportState, stageLabel, message }: Props) {
-  // Use progress.stage_label if available, otherwise infer from report_state
   const activeIndex = reportState === 'processing' ? 1 : 0;
 
   return (
-    <div className="card-surface p-7">
-      {stageLabel && (
-        <p className="mb-4 text-sm font-medium text-foreground">{stageLabel}</p>
-      )}
-      {message && (
-        <p className="mb-4 text-xs text-muted-foreground">{message}</p>
-      )}
-      <ul className="space-y-3.5">
-        {STEPS.map((step, i) => (
-          <motion.li
-            key={i}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.12 }}
-            className="flex items-center gap-3"
-          >
-            <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${
-              i <= activeIndex
-                ? 'bg-foreground text-background'
-                : 'border border-border text-muted-foreground'
-            }`}>
-              {i < activeIndex ? '✓' : i + 1}
-            </div>
-            <span className={`text-sm ${
-              i <= activeIndex ? 'font-medium text-foreground' : 'text-muted-foreground'
-            }`}>
-              {step}
-            </span>
-            {i === activeIndex && (
-              <span className="h-1.5 w-1.5 animate-pulse-slow rounded-full bg-foreground" />
-            )}
-          </motion.li>
-        ))}
-      </ul>
+    <div className="card-surface p-8">
+      <div className="flex items-center gap-3 mb-6">
+        <Loader2 className="h-5 w-5 animate-spin text-foreground" />
+        <div>
+          {stageLabel && <p className="text-sm font-semibold text-foreground">{stageLabel}</p>}
+          {message && <p className="text-xs text-muted-foreground">{message}</p>}
+          {!stageLabel && !message && <p className="text-sm font-semibold text-foreground">Processing your snapshot…</p>}
+        </div>
+      </div>
+
+      <div className="space-y-0">
+        {STEPS.map((step, i) => {
+          const isDone = i < activeIndex;
+          const isActive = i === activeIndex;
+          const isPending = i > activeIndex;
+
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: i * 0.1 }}
+              className="flex items-center gap-3 py-3 border-b border-border last:border-b-0"
+            >
+              <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold transition-all ${
+                isDone
+                  ? 'bg-metric-green text-primary-foreground'
+                  : isActive
+                  ? 'bg-foreground text-background'
+                  : 'bg-muted text-muted-foreground'
+              }`}>
+                {isDone ? '✓' : i + 1}
+              </div>
+              <span className={`text-sm transition-colors ${
+                isDone ? 'text-muted-foreground line-through' : isActive ? 'font-semibold text-foreground' : 'text-muted-foreground'
+              }`}>
+                {step}
+              </span>
+              {isActive && (
+                <span className="h-2 w-2 animate-pulse rounded-full bg-foreground" />
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }
