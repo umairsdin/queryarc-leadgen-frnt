@@ -117,6 +117,9 @@ export default function CompetitorCard({ report }: Props) {
     }
   }, [activeEvidence, evidenceReady, evidence?.url_template]);
 
+
+  if (!overall) return null;
+
   return (
     <div className="card-surface flex h-full flex-col overflow-hidden">
       <div className={`h-1 w-full ${pct >= 50 ? 'bg-metric-red' : pct >= 25 ? 'bg-metric-amber' : 'bg-metric-green'}`} />
