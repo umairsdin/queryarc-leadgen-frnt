@@ -1,28 +1,42 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
-import { QuestionTested, ModelAnswer, Highlight } from '@/types/report';
+import { ModelAnswerGroup, HighlightSpan } from '@/types/report';
 
 interface Props {
-  questionsTested?: QuestionTested[];
-  modelAnswers?: ModelAnswer[];
-  highlights?: Highlight[];
+  questions?: string[];
+  modelAnswers?: ModelAnswerGroup[];
   brandName?: string;
 }
 
-export default function ProofSection({ questionsTested, modelAnswers, highlights, brandName }: Props) {
+export default function ProofSection({ questions, modelAnswers, brandName }: Props) {
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
-
   const activeModel = modelAnswers?.find(m => m.model === selectedModel);
 
-  const highlightText = (text: string) => {
-    if (!highlights || highlights.length === 0) return text;
-    let result = text;
-    if (brandName) {
-      const regex = new RegExp(`(${brandName})`, 'gi');
-      result = result.replace(regex, '**$1**');
+  const renderHighlightedText = (text: string, highlights: HighlightSpan[]) => {
+    if (!highlights || highlights.length === 0) return <span>{text}</span>;
+
+    // Sort highlights by start position
+    const sorted = [...highlights].sort((a, b) => a.start - b.start);
+    const parts: React.ReactNode[] = [];
+    let lastEnd = 0;
+
+    sorted.forEach((h, i) => {
+      if (h.start > lastEnd) {
+        parts.push(<span key={`t-${i}`}>{text.slice(lastEnd, h.start)}</span>);
+      }
+      const cls = h.type === 'brand'
+        ? 'font-semibold text-foreground'
+        : 'font-medium text-destructive';
+      parts.push(<span key={`h-${i}`} className={cls}>{text.slice(h.start, h.end)}</span>);
+      lastEnd = h.end;
+    });
+
+    if (lastEnd < text.length) {
+      parts.push(<span key="tail">{text.slice(lastEnd)}</span>);
     }
-    return result;
+
+    return <>{parts}</>;
   };
 
   return (
@@ -37,16 +51,16 @@ export default function ProofSection({ questionsTested, modelAnswers, highlights
         Verbatim model outputs used for this report. Brand and competitors are highlighted.
       </p>
 
-      {questionsTested && questionsTested.length > 0 && (
+      {questions && questions.length > 0 && (
         <div className="mt-5">
           <h4 className="text-label mb-2">Questions tested</h4>
           <ul className="space-y-1.5">
-            {questionsTested.map((q, i) => (
+            {questions.map((q, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-foreground">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border border-border text-[10px] font-semibold text-muted-foreground">
-                  {q.index || i + 1}
+                  {i + 1}
                 </span>
-                {q.question}
+                {q}
               </li>
             ))}
           </ul>
@@ -62,9 +76,7 @@ export default function ProofSection({ questionsTested, modelAnswers, highlights
                 key={m.model}
                 onClick={() => setSelectedModel(selectedModel === m.model ? null : m.model)}
                 className={`rounded-md px-3 py-1.5 text-sm transition-all ${
-                  selectedModel === m.model
-                    ? 'btn-primary'
-                    : 'btn-outline'
+                  selectedModel === m.model ? 'btn-primary' : 'btn-outline'
                 }`}
               >
                 {m.model}
@@ -81,24 +93,15 @@ export default function ProofSection({ questionsTested, modelAnswers, highlights
                 className="overflow-hidden"
               >
                 <div className="mt-4 space-y-3">
-                  {activeModel.questions.map((qa, i) => (
+                  {activeModel.answers.map((qa, i) => (
                     <div key={i} className="rounded-lg border border-border p-4">
                       <div className="flex items-start gap-2">
                         <ChevronRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-foreground/40" />
                         <div>
                           <p className="text-sm font-medium text-foreground">{qa.question}</p>
                           <p className="mt-2 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">
-                            {highlightText(qa.answer)}
+                            {renderHighlightedText(qa.answer_text, qa.highlights)}
                           </p>
-                          {qa.competitors_highlighted && qa.competitors_highlighted.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-1">
-                              {qa.competitors_highlighted.map(c => (
-                                <span key={c} className="rounded border border-destructive/20 px-1.5 py-0.5 text-[10px] font-medium text-destructive">
-                                  {c}
-                                </span>
-                              ))}
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>

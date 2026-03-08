@@ -21,10 +21,11 @@ export default function ReportPage() {
     if (!run_id) return;
     try {
       const result = await fetchRun(run_id);
-      console.log('API response:', JSON.stringify(result, null, 2));
+      console.log('API response status:', result.status, 'keys:', Object.keys(result));
       setData(result);
       return result.status;
-    } catch {
+    } catch (err) {
+      console.error('Poll error:', err);
       setError('Failed to load report.');
       return 'failed';
     }
@@ -65,7 +66,7 @@ export default function ReportPage() {
           {isFailed && (
             <motion.div key="failed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <FailedState
-                message={error || data?.failed_message || 'Run failed.'}
+                message={error || data?.error_message || 'Run failed.'}
                 onBack={() => navigate('/ai-visibility')}
               />
             </motion.div>
@@ -73,49 +74,27 @@ export default function ReportPage() {
 
           {isComplete && data && (
             <motion.div key="complete" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              {data.metrics && data.metrics.length > 0 && (
-                <MetricCardSection metrics={data.metrics} brandName={data.brand_name} />
+              {data.visibility_rate && (
+                <MetricCardSection data={data} />
               )}
 
               {data.what_this_means && (
                 <WhatThisMeansSection data={data.what_this_means} />
               )}
 
-              {data.action_sections && data.action_sections.map((action, i) => (
-                <ActionSectionBlock key={i} action={action} isFirst={i === 0} ctaSubline={i > 0 ? data.cta_subline : undefined} />
-              ))}
-
-              {(data.questions_tested || data.model_answers) && (
-                <ProofSection
-                  questionsTested={data.questions_tested}
-                  modelAnswers={data.model_answers}
-                  highlights={data.highlights}
-                  brandName={data.brand_name}
+              {data.action_oriented && (
+                <ActionSectionBlock
+                  action={data.action_oriented}
+                  ctaSubline={data.cta_subline}
                 />
               )}
 
-              {data.loom_url && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.45 }}
-                  className="card-surface mt-6 p-6"
-                >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    <div className="flex-1">
-                      <h3 className="text-sm font-medium text-foreground">{data.loom_title || 'Watch: how to read this report'}</h3>
-                      <p className="mt-1 text-xs text-muted-foreground">{data.loom_helper || 'See how to interpret the cards and what to do next.'}</p>
-                    </div>
-                    <div className="aspect-video w-full overflow-hidden rounded-md sm:w-64">
-                      <iframe
-                        src={data.loom_url}
-                        title="Report walkthrough"
-                        className="h-full w-full"
-                        allowFullScreen
-                      />
-                    </div>
-                  </div>
-                </motion.div>
+              {(data.questions || data.model_answers) && (
+                <ProofSection
+                  questions={data.questions}
+                  modelAnswers={data.model_answers}
+                  brandName={data.brand_name}
+                />
               )}
             </motion.div>
           )}

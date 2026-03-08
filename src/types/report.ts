@@ -1,57 +1,69 @@
-// API response types for the AI Visibility report
+// API response types for the AI Visibility report — matches /api/run/{run_id}
 
-export interface RunRequest {
+export interface ReportData {
+  run_id: string;
+  status: 'pending' | 'running' | 'complete' | 'failed';
   brand_name: string;
   website: string;
   competitors: string[];
+  models_attempted: string[];
+  error_message: string;
+  questions: string[];
+  answers: FlatAnswer[];
+  model_answers: ModelAnswerGroup[];
+
+  // Analysis
+  visibility_rate: RateMetric;
+  competitor_visibility: CompetitorVisibilityItem[];
+  competitor_presence_card: CompetitorPresenceCard;
+  open_opportunity_rate: RateMetric;
+  opportunity_events: OpportunityEvent[];
+  opportunity_model_breakdown: Record<string, number>;
+
+  // Display helpers
+  models_header: string;
+  helper_text: string;
+  top_insight: string;
+
+  // Narrative
+  what_this_means: WhatThisMeans;
+  action_oriented: ActionOriented;
+  cta_subline: string;
 }
 
-export interface RunResponse {
-  run_id: string;
+export interface RateMetric {
+  percent: number;
+  count: number;
+  total: number;
 }
 
-export interface MetricCard {
-  title: string;
-  subtitle: string;
-  metric_value: string;
-  metric_label: string;
-  metric_support?: string;
-  insight?: string;
-  details?: CompetitorVisibility[] | ModelBreakdown[] | OpportunityEvent[];
-  detail_label?: string;
-  // Competitor presence specific
-  proof_line?: string;
-  top_rival_line?: string;
-  assistant_breakdown?: AssistantBreakdown[];
-  evidence?: EvidenceItem[];
+export interface CompetitorVisibilityItem {
+  brand: string;
+  percent: number;
+  count: number;
 }
 
-export interface CompetitorVisibility {
-  name: string;
-  value: string;
+export interface CompetitorPresenceCard {
+  brand_question_id: string;
+  exclusion_applied: boolean;
+  eligible_answer_count: number;
+  piggyback_overall: { pct: number; num: number; denom: number };
+  rows: PresenceRow[];
+  top_rival: { competitor: string; assistants_count: number; assistants_denom: number };
 }
 
-export interface ModelBreakdown {
+export interface PresenceRow {
   model: string;
-  value: string;
+  denom: number;
+  piggyback_pct: number;
+  competitor_pct: Record<string, number>;
 }
 
 export interface OpportunityEvent {
-  question: string;
+  buyer_label: string;
+  buyer_question: string;
   model: string;
-  answer: string;
-}
-
-export interface AssistantBreakdown {
-  model: string;
-  competitors: { name: string; count: number }[];
-}
-
-export interface EvidenceItem {
-  model: string;
-  question: string;
-  answer: string;
-  competitors_found: string[];
+  answer_text: string;
 }
 
 export interface WhatThisMeans {
@@ -60,51 +72,40 @@ export interface WhatThisMeans {
   note?: string;
 }
 
-export interface ActionSection {
-  primary_title: string;
-  locked_text?: string;
-  cta_text: string;
-  cta_proof?: string;
-  secondary_title?: string;
-  secondary_teaser?: string;
-  secondary_bullets?: string[];
+export interface ActionOriented {
+  title: string;
+  teaser: string;
+  bullets: string[];
 }
 
-export interface QuestionTested {
-  question: string;
-  index: number;
-}
-
-export interface ModelAnswer {
-  model: string;
-  questions: {
-    question: string;
-    answer: string;
-    brand_highlighted?: boolean;
-    competitors_highlighted?: string[];
-  }[];
-}
-
-export interface Highlight {
+export interface HighlightSpan {
+  start: number;
+  end: number;
   type: 'brand' | 'competitor';
-  text: string;
+  name: string;
 }
 
-export interface ReportData {
-  status: 'pending' | 'running' | 'complete' | 'failed';
-  brand_name?: string;
-  website?: string;
-  total_questions?: number;
-  models_tested?: string[];
-  failed_message?: string;
-  metrics?: MetricCard[];
-  what_this_means?: WhatThisMeans;
-  action_sections?: ActionSection[];
-  questions_tested?: QuestionTested[];
-  model_answers?: ModelAnswer[];
-  highlights?: Highlight[];
-  loom_url?: string;
-  loom_title?: string;
-  loom_helper?: string;
-  cta_subline?: string[];
+export interface FlatAnswer {
+  question_id: number;
+  question: string;
+  model: string;
+  answer_text: string;
+  recommended_brands: string[];
+  highlights: HighlightSpan[];
+}
+
+export interface ModelAnswerGroup {
+  model_key: string;
+  model: string;
+  status: string;
+  completed_count: number;
+  answers: ModelAnswerEntry[];
+}
+
+export interface ModelAnswerEntry {
+  question_id: number;
+  question: string;
+  answer_text: string;
+  status: string;
+  highlights: HighlightSpan[];
 }

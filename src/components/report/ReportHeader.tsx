@@ -19,8 +19,8 @@ export default function ReportHeader({ data }: Props) {
         <div className="mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
           <span className="font-medium text-foreground">{data.brand_name}</span>
           {data.website && <span>{data.website}</span>}
-          {data.total_questions != null && <span>{data.total_questions} questions tested</span>}
-          {data.models_tested && <span>{data.models_tested.join(', ')}</span>}
+          {data.questions?.length > 0 && <span>{data.questions.length} questions tested</span>}
+          {data.models_header && <span>{data.models_header}</span>}
         </div>
       )}
     </motion.div>
