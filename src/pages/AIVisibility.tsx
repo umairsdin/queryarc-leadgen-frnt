@@ -70,6 +70,11 @@ export default function AIVisibilityPage() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,hsl(239_84%_67%/0.08),transparent_70%)]" />
 
       <div className="relative mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-20 lg:px-8">
+        {/* Brand header */}
+        <div className="flex items-center gap-2.5 mb-10">
+          <QueryArcLogo />
+          <span className="font-bold text-lg text-foreground">QueryArc</span>
+        </div>
         {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
