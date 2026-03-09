@@ -4,18 +4,13 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Eye, Users, Target, Shield, Zap, CheckCircle } from 'lucide-react';
 import { submitRun } from '@/lib/api';
 import QueryArcLogo from '@/components/shared/QueryArcLogo';
-import chatgptLogo from '@/assets/llm-logos/chatgpt.png';
-import claudeLogo from '@/assets/llm-logos/claude.png';
-import geminiLogo from '@/assets/llm-logos/gemini.png';
-import perplexityLogo from '@/assets/llm-logos/perplexity.png';
-import grokLogo from '@/assets/llm-logos/grok.svg';
 
 const AI_MODELS = [
-  { name: 'ChatGPT', logo: chatgptLogo },
-  { name: 'Claude', logo: claudeLogo },
-  { name: 'Gemini', logo: geminiLogo },
-  { name: 'Perplexity', logo: perplexityLogo },
-  { name: 'Grok', logo: grokLogo },
+  { name: 'ChatGPT', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg', fallback: 'GPT' },
+  { name: 'Claude', logo: 'https://cdn.simpleicons.org/anthropic/6366f1', fallback: 'CLD' },
+  { name: 'Gemini', logo: 'https://cdn.simpleicons.org/googlegemini/6366f1', fallback: 'GEM' },
+  { name: 'Perplexity', logo: 'https://cdn.simpleicons.org/perplexity/6366f1', fallback: 'PPX' },
+  { name: 'Grok', logo: 'https://cdn.simpleicons.org/x/6366f1', fallback: 'GRK' },
 ];
 
 const VALUE_PROPS = [
@@ -201,8 +196,10 @@ export default function AIVisibilityPage() {
                       <img
                         src={m.logo}
                         alt={`${m.name} logo`}
-                        className="h-7 w-7 object-contain"
+                        className="h-6 w-6"
+                        onError={e => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden'); }}
                       />
+                      <span className="hidden rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">{m.fallback}</span>
                       <span className="text-[11px] text-muted-foreground">{m.name}</span>
                     </div>
                   ))}

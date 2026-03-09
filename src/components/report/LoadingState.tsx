@@ -1,17 +1,12 @@
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
-import chatgptLogo from '@/assets/llm-logos/chatgpt.png';
-import claudeLogo from '@/assets/llm-logos/claude.png';
-import geminiLogo from '@/assets/llm-logos/gemini.png';
-import perplexityLogo from '@/assets/llm-logos/perplexity.png';
-import grokLogo from '@/assets/llm-logos/grok.svg';
 
 const LLM_MODELS = [
-  { name: 'ChatGPT', logo: chatgptLogo },
-  { name: 'Claude', logo: claudeLogo },
-  { name: 'Gemini', logo: geminiLogo },
-  { name: 'Perplexity', logo: perplexityLogo },
-  { name: 'Grok', logo: grokLogo },
+  { name: 'ChatGPT', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg', fallback: 'GPT' },
+  { name: 'Claude', logo: 'https://cdn.simpleicons.org/anthropic/6366f1', fallback: 'CLD' },
+  { name: 'Gemini', logo: 'https://cdn.simpleicons.org/googlegemini/6366f1', fallback: 'GEM' },
+  { name: 'Perplexity', logo: 'https://cdn.simpleicons.org/perplexity/6366f1', fallback: 'PPX' },
+  { name: 'Grok', logo: 'https://cdn.simpleicons.org/x/6366f1', fallback: 'GRK' },
 ];
 
 const STEPS = [
@@ -73,8 +68,10 @@ export default function LoadingState({ reportState, stageLabel, message }: Props
                 <img
                   src={m.logo}
                   alt={`${m.name} logo`}
-                  className="h-7 w-7 object-contain"
+                  className="h-6 w-6"
+                  onError={e => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden'); }}
                 />
+                <span className="hidden text-xs font-bold text-primary">{m.fallback}</span>
               </motion.div>
               <span className="text-[11px] font-medium text-muted-foreground">{m.name}</span>
             </motion.div>
