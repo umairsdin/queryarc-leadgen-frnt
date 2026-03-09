@@ -73,10 +73,8 @@ export default function LoadingState({ reportState, stageLabel, message }: Props
                 <img
                   src={m.logo}
                   alt={`${m.name} logo`}
-                  className="h-6 w-6"
-                  onError={e => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden'); }}
+                  className="h-7 w-7 object-contain"
                 />
-                <span className="hidden text-xs font-bold text-primary">{m.fallback}</span>
               </motion.div>
               <span className="text-[11px] font-medium text-muted-foreground">{m.name}</span>
             </motion.div>
