@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { CanonicalReport } from '@/types/report';
+import QueryArcLogo from '@/components/shared/QueryArcLogo';
 
 interface Props {
   report: CanonicalReport | null;
