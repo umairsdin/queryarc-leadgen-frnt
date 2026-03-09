@@ -1,12 +1,17 @@
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import chatgptLogo from '@/assets/llm-logos/chatgpt.png';
+import claudeLogo from '@/assets/llm-logos/claude.png';
+import geminiLogo from '@/assets/llm-logos/gemini.png';
+import perplexityLogo from '@/assets/llm-logos/perplexity.png';
+import grokLogo from '@/assets/llm-logos/grok.svg';
 
 const LLM_MODELS = [
-  { name: 'ChatGPT', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg', fallback: 'GPT' },
-  { name: 'Claude', logo: 'https://cdn.simpleicons.org/anthropic/6366f1', fallback: 'CLD' },
-  { name: 'Gemini', logo: 'https://cdn.simpleicons.org/googlegemini/6366f1', fallback: 'GEM' },
-  { name: 'Perplexity', logo: 'https://cdn.simpleicons.org/perplexity/6366f1', fallback: 'PPX' },
-  { name: 'Grok', logo: 'https://cdn.simpleicons.org/x/6366f1', fallback: 'GRK' },
+  { name: 'ChatGPT', logo: chatgptLogo },
+  { name: 'Claude', logo: claudeLogo },
+  { name: 'Gemini', logo: geminiLogo },
+  { name: 'Perplexity', logo: perplexityLogo },
+  { name: 'Grok', logo: grokLogo },
 ];
 
 const STEPS = [
