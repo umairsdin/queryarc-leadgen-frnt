@@ -107,7 +107,6 @@ export default function ReportPage() {
               {(sec?.primary_cta !== false || sec?.final_cta !== false) && report.narratives?.action_oriented && (
                 <ActionSectionBlock
                   action={report.narratives.action_oriented}
-                  ctaSubline={report.narratives.cta_subline}
                 />
               )}
 
@@ -121,7 +120,16 @@ export default function ReportPage() {
 
               {/* Final CTA - "Convert this snapshot into fixes" */}
               {sec?.final_cta !== false && (
-                <FinalCtaSection ctaSubline={report.narratives?.cta_subline} />
+                <FinalCtaSection
+                  brand={report.input.brand_name}
+                  topCompetitor={report.summary.top_competitor}
+                  visibilityPct={report.metrics.visibility_rate.percent ?? 0}
+                  competitorPct={
+                    report.metrics.competitor_piggyback_rate.percent ??
+                    ((report.metrics.competitor_piggyback_rate.pct ?? 0) * 100)
+                  }
+                  opportunityPct={report.metrics.open_opportunity_rate.percent ?? 0}
+                />
               )}
             </motion.div>
           )}
