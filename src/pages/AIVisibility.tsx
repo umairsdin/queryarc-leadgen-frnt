@@ -204,6 +204,9 @@ export default function AIVisibilityPage() {
                     </div>
                   ))}
                 </div>
+                <p className="mt-3 text-[11px] text-muted-foreground/70 leading-snug">
+                  Free snapshot: all 5 engines · 3 questions. Paid Diagnostic: ChatGPT + Gemini · 10 neutral prompts · 3 runs each.
+                </p>
               </div>
             </div>
           </motion.div>

@@ -10,6 +10,7 @@ import MetricCardSection from '@/components/report/MetricCardSection';
 import WhatThisMeansSection from '@/components/report/WhatThisMeansSection';
 import ActionSectionBlock from '@/components/report/ActionSectionBlock';
 import ProofSection from '@/components/report/ProofSection';
+import EmailCaptureBar from '@/components/report/EmailCaptureBar';
 import FinalCtaSection from '@/components/report/FinalCtaSection';
 
 export default function ReportPage() {
@@ -120,16 +121,22 @@ export default function ReportPage() {
 
               {/* Final CTA - "Convert this snapshot into fixes" */}
               {sec?.final_cta !== false && (
-                <FinalCtaSection
-                  brand={report.input.brand_name}
-                  topCompetitor={report.summary.top_competitor}
-                  visibilityPct={report.metrics.visibility_rate.percent ?? 0}
-                  competitorPct={
-                    report.metrics.competitor_piggyback_rate.percent ??
-                    ((report.metrics.competitor_piggyback_rate.pct ?? 0) * 100)
-                  }
-                  opportunityPct={report.metrics.open_opportunity_rate.percent ?? 0}
-                />
+                <>
+                  <EmailCaptureBar
+                    brand={report.input.brand_name}
+                    reportId={run_id || report.run.id}
+                  />
+                  <FinalCtaSection
+                    brand={report.input.brand_name}
+                    topCompetitor={report.summary.top_competitor}
+                    visibilityPct={report.metrics.visibility_rate.percent ?? 0}
+                    competitorPct={
+                      report.metrics.competitor_piggyback_rate.percent ??
+                      ((report.metrics.competitor_piggyback_rate.pct ?? 0) * 100)
+                    }
+                    opportunityPct={report.metrics.open_opportunity_rate.percent ?? 0}
+                  />
+                </>
               )}
             </motion.div>
           )}
