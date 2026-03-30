@@ -59,7 +59,7 @@ export default function EmailCaptureBar({ brand, reportId }: EmailCaptureBarProp
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
               <p className="text-sm text-foreground font-medium">
-                Sent - check your inbox for your report and 3 fix tips.
+                Sent — check your inbox for your report and 3 fix tips.
               </p>
             </div>
           ) : (
@@ -68,7 +68,7 @@ export default function EmailCaptureBar({ brand, reportId }: EmailCaptureBarProp
                 Save this report + get a 3-tip fix guide for {brand}
               </p>
               <p className="text-xs text-muted-foreground mb-3">
-                Sent to your inbox. No spam. Unsubscribe any time.
+                We'll email your report + 3 fix tips. No spam, unsubscribe any time.
               </p>
               <div className="flex items-center gap-2">
                 <input
