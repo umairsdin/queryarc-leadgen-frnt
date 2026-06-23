@@ -1,5 +1,5 @@
 const API_BASE = (
-  process.env.NEXT_PUBLIC_QUERYARC_API_URL || 'https://queryarc-mini-audit-production.up.railway.app'
+  process.env.NEXT_PUBLIC_QUERYARC_API_URL || 'https://mini-audit-api.queryarc.com'
 ).replace(/\/+$/, '');
 
 export async function submitRun(payload: {
