@@ -8,7 +8,7 @@ export type FaqEntry = {
 };
 
 export type RouteEntry = {
-  id: "aiVisibility" | "report";
+  id: "aiVisibility" | "report" | "fix";
   path: string;
   title: string;
   description: string;
@@ -78,6 +78,19 @@ export const routes: RouteEntry[] = [
     description:
       "View a QueryArc AI visibility report with brand visibility, competitor piggybacking, open opportunities, and next-step guidance.",
     h1: "AI Visibility Report",
+    type: "report",
+    index: false,
+    dynamic: true,
+    priority: 0,
+    changeFrequency: "never",
+  },
+  {
+    id: "fix",
+    path: "/fix/[run_id]/",
+    title: "Fix Your AI Visibility | QueryArc",
+    description:
+      "Turn your QueryArc AI visibility report into a done-with-you fix plan — built and executed with founder Umair Salahuddin.",
+    h1: "Fix Your AI Visibility",
     type: "report",
     index: false,
     dynamic: true,

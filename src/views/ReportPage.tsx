@@ -13,7 +13,7 @@ import WhatThisMeansSection from '@/components/report/WhatThisMeansSection';
 import ActionSectionBlock from '@/components/report/ActionSectionBlock';
 import ProofSection from '@/components/report/ProofSection';
 import EmailCaptureBar from '@/components/report/EmailCaptureBar';
-import FinalCtaSection from '@/components/report/FinalCtaSection';
+import FixCtaSection from '@/components/report/FixCtaSection';
 
 export default function ReportPage({ runId }: { runId: string }) {
   const router = useRouter();
@@ -127,15 +127,17 @@ export default function ReportPage({ runId }: { runId: string }) {
                     brand={report.input.brand_name}
                     reportId={runId || report.run.id}
                   />
-                  <FinalCtaSection
+                  <FixCtaSection
                     brand={report.input.brand_name}
                     topCompetitor={report.summary.top_competitor}
                     visibilityPct={report.metrics.visibility_rate.percent ?? 0}
                     competitorPct={
                       report.metrics.competitor_piggyback_rate.percent ??
-                      ((report.metrics.competitor_piggyback_rate.pct ?? 0) * 100)
+                      report.metrics.competitor_piggyback_rate.pct ??
+                      0
                     }
                     opportunityPct={report.metrics.open_opportunity_rate.percent ?? 0}
+                    runId={runId || report.run.id}
                   />
                 </>
               )}
