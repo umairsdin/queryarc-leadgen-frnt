@@ -79,7 +79,9 @@ export default function CompetitorCard({ report }: Props) {
   const evidence = report.resources?.evidence;
   const evidenceReady = isEvidenceAvailable(evidence);
 
-  const pct = overall ? (overall.percent != null ? Math.round(overall.percent) : Math.round((overall.pct ?? 0) * 100)) : 0;
+  // Backend sends both `percent` and `pct` already on a 0–100 scale (e.g. 1/10 -> 10.0),
+  // so round directly — never multiply by 100 again (that produced the "1000%" bug).
+  const pct = overall ? Math.round(overall.percent ?? overall.pct ?? 0) : 0;
   const count = overall ? (overall.count ?? overall.num ?? 0) : 0;
   const topRival = cp?.top_rival ?? fallback?.top_rival;
   const rows = cp?.rows ?? fallback?.rows;
