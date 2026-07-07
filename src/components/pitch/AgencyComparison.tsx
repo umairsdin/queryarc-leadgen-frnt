@@ -17,8 +17,8 @@ export default function AgencyComparison() {
             Agency results without the agency price
           </h2>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            You don&apos;t need a $10k/month retainer to win AI answers. You need the right
-            plan and someone to execute it.
+            You don&apos;t need a $5,000–$15,000/month retainer to win AI answers. You need
+            the right plan and someone to execute it.
           </p>
         </motion.div>
 

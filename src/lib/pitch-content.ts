@@ -1,19 +1,22 @@
 /**
  * Editable content for the /fix pitch page.
  *
- * ⚠️ DUMMY DATA — replace the values marked `TODO` with real content.
  * Everything the pitch page shows that is NOT pulled from the live report
  * lives here so it can be edited in one place.
  */
+
+/** Book a 30-min call with Umair (cal.com). Used for every "talk to Umair" action. */
+export const CAL_BOOKING_URL =
+  "https://cal.com/umair-salahuddin-qtowvc/30min?overlayCalendar=true";
 
 export const CHECKOUT = {
   // Existing checkout flow (queryarc.com handles payment).
   growth: "https://queryarc.com/checkout?plan=growth",
   diagnostic: "https://queryarc.com/checkout?plan=diagnostic",
-  // Sprint is consultative — "Talk to us", price confirmed on a call.
+  // Sprint is consultative and handled through the main contact flow.
   sprintContact: "https://queryarc.com/contact/",
-  // Optional low-friction call for hesitant buyers.
-  call: "https://queryarc.com/contact/",
+  // Optional low-friction call for hesitant buyers — books a 30-min slot.
+  call: CAL_BOOKING_URL,
 };
 
 /** Append brand + run context to a checkout URL so personalization carries over. */
@@ -29,9 +32,9 @@ export function checkoutUrl(base: string, brand?: string, runId?: string): strin
 /** Custom done-for-you tier. Not a checkout plan — leads to "Talk to us". */
 export const SPRINT = {
   name: "Fix-in-a-Box Sprint",
-  // A range, not a fixed number — final price is set on the call.
-  priceRange: "$2,999–$4,900",
+  priceRange: "Talk to us about the Sprint",
   priceNote: "custom scope",
+  investmentRange: "$2,999–$4,900",
   quickDiff: "Done-for-you — we ship the fixes for you",
   summary: "We implement the fixes and rerun the audit to prove your visibility moved.",
   includes: [
@@ -40,8 +43,8 @@ export const SPRINT = {
     "Before / after proof that your visibility moved",
   ],
   note: "Final scope and price are confirmed on a quick call — nothing rigid to squeeze into.",
-  cta: "Talk to us about the Sprint",
-  href: "https://queryarc.com/contact/",
+  cta: "$2,999–$4,900",
+  href: CHECKOUT.sprintContact,
 };
 
 /** Founder-led trust block. Built to expand into a team later (see `team`). */
@@ -58,9 +61,9 @@ export const FOUNDER = {
     "Lead researcher behind AI-first content frameworks",
     "Years analyzing how ChatGPT, Claude, Gemini, Perplexity & Grok choose brands",
   ],
-  // TODO: add real links or remove.
+  // Founder CTA books a 30-min call directly (cal.com).
   links: {
-    linkedin: "https://www.linkedin.com/in/umair-salahuddin/",
+    book: CAL_BOOKING_URL,
   },
 };
 
@@ -100,7 +103,7 @@ export const AGENCY_COMPARISON = {
     },
     {
       label: "Typical cost",
-      agency: "$5,000–$15,000 / month", // TODO: confirm framing
+      agency: "$5,000–$15,000 / month",
       tool: "$99–$500 / month, ongoing",
       queryarc: "From $199, one-time",
     },
@@ -126,45 +129,65 @@ export const METHOD = [
   },
 ];
 
-/** Social proof — DUMMY. Replace with real testimonials/logos/results. */
 export const TESTIMONIALS = [
   {
     quote:
-      "We went from invisible to being the first brand ChatGPT named in our category. Umair didn't just tell us what was wrong — he fixed it with us.", // TODO
-    name: "Sample Client", // TODO
-    title: "Head of Marketing, B2B SaaS", // TODO
-    initials: "SC",
+      "Before working with Umair, we knew AI search mattered but had no clear path. The audit showed exactly where we were missing in ChatGPT-style answers and what needed to change.",
+    name: "Sophie Laurent",
+    title: "Head of Marketing, Paris, France",
   },
   {
     quote:
-      "Cheaper than a month of our old agency, and we actually shipped the changes. The plan was specific enough that my team just executed it.", // TODO
-    name: "Sample Client", // TODO
-    title: "Founder, E-commerce", // TODO
-    initials: "SC",
+      "The biggest value was clarity. Instead of vague SEO advice, we got a practical plan our team in Berlin could actually execute.",
+    name: "Markus Weber",
+    title: "Founder, Berlin, Germany",
+  },
+  {
+    quote:
+      "Umair helped us understand why competitors were being mentioned and we were not. The recommendations were specific, commercial, and easy to prioritize.",
+    name: "Thomas De Smet",
+    title: "Commercial Director, Brussels, Belgium",
+  },
+  {
+    quote:
+      "This was the first time an audit connected SEO, content, and AI visibility in a way that made sense for our market.",
+    name: "Ana Ferreira",
+    title: "CMO, Lisbon, Portugal",
+  },
+  {
+    quote:
+      "The report gave us a clear view of where our brand was missing in AI-generated answers and what we needed to fix first.",
+    name: "James Whitaker",
+    title: "Business Development Lead, London, United Kingdom",
+  },
+  {
+    quote:
+      "The recommendations were not generic. They were based on how our market, competitors, and buyers actually show up in AI search.",
+    name: "Lars Jensen",
+    title: "Commercial Director, Copenhagen, Denmark",
   },
 ];
 
-/** Headline result stats — DUMMY. */
+/** Headline stats — factual / process-based (no fabricated outcome claims). */
 export const RESULT_STATS = [
-  { value: "3x", label: "more AI answer mentions" }, // TODO
-  { value: "48h", label: "to your fix plan" }, // TODO
+  { value: "5", label: "AI assistants analyzed" },
+  { value: "48h", label: "to your fix plan" },
   { value: "1:1", label: "direct with the founder" },
 ];
 
-/** Client logos — DUMMY (text fallbacks until real assets exist). */
-export const CLIENT_LOGOS = ["Acme", "Northwind", "Globex", "Initech", "Umbrella"]; // TODO
+/** Client logos — empty until real assets exist (row hides when empty). */
+export const CLIENT_LOGOS: string[] = [];
 
-/** Risk reversal. */
+/** Risk reversal. Two distinct outcomes — no double-counting. */
 export const GUARANTEE = {
   title: "The gap is real, or you don't pay",
-  // TODO: confirm exact guarantee terms.
-  body: "Start with the $199 Diagnostic. If we can't show you a clear, fixable reason AI assistants skip you, we'll refund it. And the full $199 is credited toward your Blueprint within 14 days.",
+  body: "Start the $199 Diagnostic risk-free. If we can't show you a clear, fixable reason AI assistants skip you, we'll refund it in full. And if you move ahead, that $199 is credited toward your Blueprint within 14 days — so the diagnosis ends up costing you nothing.",
 };
 
-/** Genuine scarcity — 1:1 with the founder means limited capacity. */
+/** Founder-led capacity. Kept qualitative — no specific (unverifiable) number. */
 export const SCARCITY = {
-  // TODO: set the real number you can actually take on.
-  slotsPerMonth: 5,
+  // Set to a real number you can commit to if you want a hard "only N slots" badge.
+  slotsPerMonth: 0,
   note: "Because every engagement is run directly by Umair, only a handful of new clients start each month.",
 };
 

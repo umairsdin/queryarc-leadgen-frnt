@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Linkedin } from 'lucide-react';
+import { CheckCircle2, CalendarClock } from 'lucide-react';
 import { FOUNDER, TEAM } from '@/lib/pitch-content';
 import { Personalization } from '@/lib/pitch-personalization';
 
@@ -65,15 +65,15 @@ export default function FounderSection({ p }: { p: Personalization }) {
                 not a junior account team. One-on-one, until it&apos;s shipped.
               </p>
 
-              {FOUNDER.links?.linkedin && (
+              {FOUNDER.links?.book && (
                 <a
-                  href={FOUNDER.links.linkedin}
+                  href={FOUNDER.links.book}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
                 >
-                  <Linkedin className="h-4 w-4" />
-                  Connect on LinkedIn
+                  <CalendarClock className="h-4 w-4" />
+                  Book a 30-min call with {FOUNDER.name.split(' ')[0]}
                 </a>
               )}
             </div>

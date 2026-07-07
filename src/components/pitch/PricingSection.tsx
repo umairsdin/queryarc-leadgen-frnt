@@ -113,26 +113,31 @@ export default function PricingSection({ p }: { p: Personalization }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="card-surface flex flex-col bg-foreground p-6"
+            className="card-surface flex flex-col border-primary/30 bg-primary-light/70 p-6"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-background/60">
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary">
               {SPRINT.name}
             </p>
-            <p className="mt-1 text-4xl font-bold text-background">{SPRINT.priceRange}</p>
-            <p className="mt-1 text-sm font-medium text-background/90">{SPRINT.quickDiff}</p>
-            <p className="mt-2 text-sm leading-snug text-background/60">{SPRINT.summary}</p>
+            <a
+              href={SPRINT.href}
+              className="mt-2 text-2xl font-bold leading-tight text-foreground underline decoration-primary/30 underline-offset-4 transition-colors hover:text-primary sm:text-3xl"
+            >
+              {SPRINT.priceRange}
+            </a>
+            <p className="mt-2 text-sm font-medium text-primary">{SPRINT.quickDiff}</p>
+            <p className="mt-2 text-sm leading-snug text-muted-foreground">{SPRINT.summary}</p>
             <ul className="mt-5 flex-1 space-y-2.5">
               {SPRINT.includes.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-sm text-background/90">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-background/70" />
+                <li key={item} className="flex items-start gap-2 text-sm text-foreground">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-4 text-xs italic text-background/50">{SPRINT.note}</p>
+            <p className="mt-4 text-xs italic text-muted-foreground">{SPRINT.note}</p>
             <a
               href={SPRINT.href}
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-background px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-background/90"
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               <MessageCircle className="h-4 w-4" />
               {SPRINT.cta}

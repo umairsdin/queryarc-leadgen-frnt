@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { Star } from 'lucide-react';
+import { Star, Quote } from 'lucide-react';
 import { TESTIMONIALS, RESULT_STATS, CLIENT_LOGOS } from '@/lib/pitch-content';
 
-/** DUMMY social proof — see src/lib/pitch-content.ts to replace. */
+/** Social proof — edit content in src/lib/pitch-content.ts. */
 export default function SocialProofSection() {
   return (
     <section className="border-b border-border bg-secondary/30">
@@ -43,8 +43,8 @@ export default function SocialProofSection() {
                 “{t.quote}”
               </blockquote>
               <figcaption className="mt-4 flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                  {t.initials}
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Quote className="h-4 w-4" />
                 </div>
                 <div className="text-sm">
                   <p className="font-semibold text-foreground">{t.name}</p>
