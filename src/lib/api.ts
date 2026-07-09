@@ -1,4 +1,4 @@
-const API_BASE = (
+export const API_BASE = (
   process.env.NEXT_PUBLIC_QUERYARC_API_URL || 'https://queryarc-leadgen-backend-production.up.railway.app'
 ).replace(/\/+$/, '');
 

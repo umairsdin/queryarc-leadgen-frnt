@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Mail, X, ArrowRight, CheckCircle2 } from 'lucide-react';
-
-const API_BASE = 'https://queryarc-mini-audit-production.up.railway.app';
+import { API_BASE } from '@/lib/api';
 
 interface EmailCaptureBarProps {
   brand: string;
