@@ -33,10 +33,10 @@ export function checkoutUrl(base: string, brand?: string, runId?: string): strin
 export const SPRINT = {
   name: "Fix-in-a-Box Sprint",
   priceRange: "$2,999–$4,900",
-  priceNote: "defined scope",
+  priceNote: "custom scope",
   investmentRange: "$2,999–$4,900",
   quickDiff: "No bandwidth? We build it, ship it, and prove it moved",
-  summary: "~3 priority pages at $2,999, up to 6 at $4,900 — ready-to-publish or implemented in your CMS, then the same audit re-run for before/after proof.",
+  summary: "Custom scope — typically 3–6 priority pages, chosen with you on a quick call. Ready-to-publish or implemented in your CMS, then the same audit re-run for before/after proof.",
   includes: [
     "We implement the approved blueprint for you",
     "Ships in 2–3 weeks; controlled rerun 2–4 weeks after publication",
