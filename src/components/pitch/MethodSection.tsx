@@ -13,11 +13,15 @@ export default function MethodSection({ p }: { p: Personalization }) {
           transition={{ duration: 0.5 }}
         >
           <span className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">
-            How we fix it
+            The whole loop
           </span>
           <h2 className="mt-3 max-w-2xl text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            From &ldquo;why are we invisible?&rdquo; to shipped in three steps
+            Your report was Stage 1. Here&apos;s how we take it all the way.
           </h2>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            One loop, three stages: find the gap, close it, keep it closed. You can enter at any stage and
+            move through at your pace — whatever you&apos;ve paid carries forward.
+          </p>
         </motion.div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3">

@@ -109,22 +109,22 @@ export const AGENCY_COMPARISON = {
   ],
 };
 
-/** The 3-step method (Diagnose → Plan → Execute). */
+/** The loop: Audit → Optimization → Monitoring. The report the buyer just read is Stage 1. */
 export const METHOD = [
   {
-    step: "01",
-    title: "Diagnose the root cause",
-    body: "We go past the score to find why AI assistants pick your competitors — the exact gaps in your content, positioning and signals.",
+    step: "Stage 1 · Audit",
+    title: "Find the gap",
+    body: "The report you just read is a 3-question sample of this. The full Audit runs 10 buyer prompts, 3 times each, across all 5 assistants — so you see every gap and exactly who's winning it.",
   },
   {
-    step: "02",
-    title: "Build your fix plan",
-    body: "You get the specific pages to create, with titles, H2s and copy direction — prioritised by what moves the needle first.",
+    step: "Stage 2 · Optimization",
+    title: "Tilt the answers your way",
+    body: "We apply our methodology to change what AI recommends — the exact pages, positioning and signals. You ship the plan (Blueprint), or we ship it for you (Sprint) and prove the movement.",
   },
   {
-    step: "03",
-    title: "Execute it together",
-    body: "This isn't a PDF you file away. We work with you to ship the changes and earn the AI mentions your competitors already have.",
+    step: "Stage 3 · Monitoring",
+    title: "Keep winning",
+    body: "Models shift and rivals keep publishing, so the gap reopens. We re-run your audit on schedule, catch it automatically, and act early — the cycle repeats, so you stay recommended.",
   },
 ];
 
