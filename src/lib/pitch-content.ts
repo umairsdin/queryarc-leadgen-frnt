@@ -32,26 +32,25 @@ export function checkoutUrl(base: string, brand?: string, runId?: string): strin
 /** Custom done-for-you tier. Not a checkout plan — leads to "Talk to us". */
 export const SPRINT = {
   name: "Fix-in-a-Box Sprint",
-  priceRange: "Talk to us about the Sprint",
-  priceNote: "custom scope",
+  priceRange: "$2,999–$4,900",
+  priceNote: "defined scope",
   investmentRange: "$2,999–$4,900",
-  quickDiff: "Done-for-you — we ship the fixes for you",
-  summary: "We implement the fixes and rerun the audit to prove your visibility moved.",
+  quickDiff: "No bandwidth? We build it, ship it, and prove it moved",
+  summary: "~3 priority pages at $2,999, up to 6 at $4,900 — ready-to-publish or implemented in your CMS, then the same audit re-run for before/after proof.",
   includes: [
     "We implement the approved blueprint for you",
-    "Priority pages shipped, aligned to how AI assistants answer",
+    "Ships in 2–3 weeks; controlled rerun 2–4 weeks after publication",
     "Before / after proof that your visibility moved",
   ],
-  note: "Final scope and price are confirmed on a quick call — nothing rigid to squeeze into.",
-  cta: "$2,999–$4,900",
+  note: "Final page count is confirmed on a quick call — nothing rigid to squeeze into.",
+  cta: "Talk to us about the Sprint",
   href: CHECKOUT.sprintContact,
 };
 
 /** Founder-led trust block. Built to expand into a team later (see `team`). */
 export const FOUNDER = {
   name: "Umair Salahuddin",
-  role: "Founder of QueryArc",
-  // TODO: drop a real headshot at /public/team/umair.jpg
+  role: "AI Visibility Research & Product",
   photo: "/team/umair.jpg",
   initials: "US",
   // Aligned with the marketing site's founder story (Arc Rank methodology).
@@ -81,7 +80,7 @@ export const AGENCY_COMPARISON = {
       label: "Who does the work",
       agency: "Junior team, account managers",
       tool: "Nobody — it just reports",
-      queryarc: "The founder, directly with you",
+      queryarc: "Umair, directly with you",
     },
     {
       label: "What you get",
@@ -99,7 +98,7 @@ export const AGENCY_COMPARISON = {
       label: "Time to value",
       agency: "Weeks to months",
       tool: "Instant data, zero fixes",
-      queryarc: "Plan within 48 hours",
+      queryarc: "Diagnosis in days, not months",
     },
     {
       label: "Typical cost",
@@ -171,8 +170,8 @@ export const TESTIMONIALS = [
 /** Headline stats — factual / process-based (no fabricated outcome claims). */
 export const RESULT_STATS = [
   { value: "5", label: "AI assistants analyzed" },
-  { value: "48h", label: "to your fix plan" },
-  { value: "1:1", label: "direct with the founder" },
+  { value: "3–5 days", label: "to your diagnosis" },
+  { value: "1:1", label: "direct with Umair" },
 ];
 
 /** Client logos — empty until real assets exist (row hides when empty). */
@@ -180,8 +179,8 @@ export const CLIENT_LOGOS: string[] = [];
 
 /** Risk reversal. Two distinct outcomes — no double-counting. */
 export const GUARANTEE = {
-  title: "The gap is real, or you don't pay",
-  body: "Start the $199 Diagnostic risk-free. If we can't show you a clear, fixable reason AI assistants skip you, we'll refund it in full. And if you move ahead, that $199 is credited toward your Blueprint within 14 days — so the diagnosis ends up costing you nothing.",
+  title: "Specific findings, or you don't pay",
+  body: "Start the $199 Diagnostic risk-free. If your report doesn't give you specific, brand-level findings — the actual AI answers, where you're missing, and what to fix first — email within 14 days for a full refund. And if you move ahead, that $199 is 100% credited toward your Blueprint or Sprint within 14 days, so the diagnosis ends up costing you nothing.",
 };
 
 /** Founder-led capacity. Kept qualitative — no specific (unverifiable) number. */
@@ -202,7 +201,7 @@ export const PITCH_FAQS = [
   },
   {
     q: "How is this different from an SEO agency?",
-    a: "You work directly with Umair, not a junior account team — at a fraction of agency cost, with a plan in 48 hours instead of months.",
+    a: "You work directly with Umair, not a junior account team — at a fraction of agency cost, with your diagnosis in days instead of months.",
   },
   {
     q: "What if the free report didn't look that bad?",

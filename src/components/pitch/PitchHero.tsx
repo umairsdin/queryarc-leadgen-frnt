@@ -58,7 +58,7 @@ export default function PitchHero({ p }: { p: Personalization }) {
         >
           <PitchCtaButtons primaryLabel={`Fix ${p.brand}'s AI visibility — from $199`} brand={p.brand} runId={p.runId} />
           <p className="mt-4 text-xs text-muted-foreground/70">
-            Plan within 48 hours · Diagnostic credited toward your Blueprint · No long contracts
+            Diagnostic in 3–5 days · Fully credited toward your next step · No long contracts
           </p>
         </motion.div>
       </div>

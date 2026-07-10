@@ -19,7 +19,9 @@ export default function PricingSection({ p }: { p: Personalization }) {
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-base text-muted-foreground">
             Start small to confirm the gap, get the exact plan, or have us ship the
-            fixes for you. The Diagnostic is credited toward whatever comes next.
+            fixes for you. Whatever you&apos;ve paid carries forward — the Diagnostic is
+            100% credited toward a Blueprint or Sprint, and the Blueprint toward a
+            Sprint, within 14 days.
           </p>
         </motion.div>
 
@@ -36,9 +38,9 @@ export default function PricingSection({ p }: { p: Personalization }) {
               AI Visibility Diagnostic
             </p>
             <p className="mt-1 text-4xl font-bold text-foreground">$199</p>
-            <p className="mt-1 text-sm font-medium text-primary">Clarity on where you&apos;re losing visibility</p>
+            <p className="mt-1 text-sm font-medium text-primary">Stop guessing whether AI is costing you deals</p>
             <p className="mt-2 text-sm leading-snug text-muted-foreground">
-              Confirm the gap first. 100% credited toward what comes next.
+              Confirm the gap first. Delivered in 3–5 business days, 100% credited toward what comes next.
             </p>
             <ul className="mt-5 flex-1 space-y-2.5">
               {[
@@ -80,9 +82,9 @@ export default function PricingSection({ p }: { p: Personalization }) {
               Growth Blueprint
             </p>
             <p className="mt-1 text-4xl font-bold text-foreground">$499</p>
-            <p className="mt-1 text-sm font-medium text-primary">The exact pages and copy to fix it</p>
+            <p className="mt-1 text-sm font-medium text-primary">Your team ships the fix — without guessing what to build</p>
             <p className="mt-2 text-sm leading-snug text-muted-foreground">
-              Get the exact plan, structure and copy direction your team can ship.
+              A publish-ready plan for your 5–6 highest-priority pages, delivered in 5–7 business days.
             </p>
             <ul className="mt-5 flex-1 space-y-2.5">
               {[
@@ -146,7 +148,7 @@ export default function PricingSection({ p }: { p: Personalization }) {
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Private engagement · Plan delivered within 48 hours · Work directly with Umair
+          Private engagement · Diagnostic in 3–5 days, Blueprint in 5–7 · Work directly with Umair
         </p>
       </div>
     </section>
