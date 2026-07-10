@@ -205,7 +205,7 @@ export const PITCH_FAQS = [
   },
   {
     q: "What if the free report didn't look that bad?",
-    a: "The free snapshot only runs 3 questions — and they lean on questions that mention your brand by name. Real buyers don't type your name. Neutral buyer questions are where the real gaps show, and that's what the paid report uncovers.",
+    a: "The free snapshot is 3 questions, run once each — a small sample. Showing up there is good news, but it isn't a moat: answers shift run to run, and buyers phrase the same question hundreds of ways. The paid report runs 10 high-intent prompts, 3 times each, across all 5 assistants — enough to see whether you're reliably recommended or just occasionally mentioned.",
   },
   {
     q: "What exactly do I get?",

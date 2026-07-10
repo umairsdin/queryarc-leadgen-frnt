@@ -22,11 +22,14 @@ export default function ClosingCta({ p }: { p: Personalization }) {
           )}
 
           <h2 className="mx-auto mt-5 max-w-2xl text-2xl font-bold tracking-tight text-background sm:text-3xl">
-            Every week you wait, {p.topCompetitor || 'a competitor'} gets harder to unseat.
+            {p.visibilityPct >= 70
+              ? `You're in the answers today. ${p.topCompetitor || 'The competition'} is working to own them.`
+              : `Every week you wait, ${p.topCompetitor || 'a competitor'} gets harder to unseat.`}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-background/70">
-            {SCARCITY.note} The report showed you the problem — let&apos;s fix it before the
-            AI answers harden around someone else.
+            {SCARCITY.note} {p.visibilityPct >= 70
+              ? 'AI answers compound around the brands they cite most — the window to become the default recommendation is open now.'
+              : "The report showed you the problem — let's fix it before the AI answers harden around someone else."}
           </p>
 
           <div className="mt-9">

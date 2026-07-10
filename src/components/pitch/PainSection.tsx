@@ -17,13 +17,14 @@ export default function PainSection({ p }: { p: Personalization }) {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            And that was the <span className="text-metric-red">easy</span> test.
+            And that was a <span className="text-metric-red">{p.questionsTested}-question</span> sample.
           </h2>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            Your free snapshot ran just {p.questionsTested} questions — and they leaned
-            on questions that mention {p.brand} by name. Real buyers don&apos;t type your
-            name. They ask AI for the best option in your category. That&apos;s where the
-            real leakage happens, and it&apos;s exactly what the paid report uncovers.
+            Your free snapshot ran just {p.questionsTested} buyer questions — once each.
+            Real buyers phrase the same question hundreds of ways, across five different
+            assistants, and answers shift from run to run. The paid report tests 10
+            high-intent prompts, 3 runs each, on all 5 assistants — that&apos;s where the
+            stable pattern shows, and where the real leakage hides.
           </p>
         </motion.div>
 
@@ -53,7 +54,7 @@ export default function PainSection({ p }: { p: Personalization }) {
               {p.competitorPct}%
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              already going to competitors
+              of answers also name a competitor
             </p>
           </div>
         </motion.div>
@@ -76,8 +77,9 @@ export default function PainSection({ p }: { p: Personalization }) {
             </blockquote>
             <figcaption className="mt-3 text-sm text-muted-foreground">
               It recommended <span className="font-semibold text-metric-red">{p.aiQuote.competitor}</span>
-              {p.visibilityCount === 0 ? ` — and never mentioned ${p.brand}.` : `.`} Every time
-              that happens, a buyer never even hears your name.
+              {p.visibilityCount === 0
+                ? ` — and never mentioned ${p.brand}. Every time that happens, a buyer never even hears your name.`
+                : `. ${p.brand} is in the answer too — but so are they, and the recommendation is what buyers act on.`}
             </figcaption>
           </motion.figure>
         )}

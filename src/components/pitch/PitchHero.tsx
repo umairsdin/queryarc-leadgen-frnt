@@ -4,8 +4,11 @@ import PitchCtaButtons from '@/components/pitch/PitchCtaButtons';
 import { Personalization } from '@/lib/pitch-personalization';
 
 export default function PitchHero({ p }: { p: Personalization }) {
+  const highVisibility = p.visibilityPct >= 70;
   const headline = p.topCompetitor
-    ? `${p.topCompetitor} is winning your buyers in AI answers. Let's take them back.`
+    ? highVisibility
+      ? `${p.topCompetitor} shows up in your buyers' AI answers as often as you do. Let's make you the recommendation.`
+      : `${p.topCompetitor} is winning your buyers in AI answers. Let's take them back.`
     : `Your buyers are choosing competitors in AI answers. Let's fix that.`;
 
   return (
@@ -45,9 +48,9 @@ export default function PitchHero({ p }: { p: Personalization }) {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground"
         >
-          Your free snapshot showed the gap. The hard part isn&apos;t spotting it —
-          it&apos;s fixing it. We build and execute the plan that earns {p.brand} the
-          AI answer mentions, working with you directly.
+          {highVisibility
+            ? `Your snapshot shows you're visible — and that the competition is right there with you in the same answers. The hard part is turning mentions into recommendations. We build and execute the plan that makes ${p.brand} the answer buyers act on, working with you directly.`
+            : `Your free snapshot showed the gap. The hard part isn't spotting it — it's fixing it. We build and execute the plan that earns ${p.brand} the AI answer mentions, working with you directly.`}
         </motion.p>
 
         <motion.div

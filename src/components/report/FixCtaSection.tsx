@@ -20,16 +20,16 @@ function urgencyLine(
   visibilityPct: number,
   opportunityPct: number
 ): string {
-  if (topCompetitor) {
-    return `And remember — these were the friendly questions. We named ${brand} directly and ${topCompetitor} still showed up. On neutral buyer questions, where nobody types your name, it gets worse.`;
+  if (visibilityPct >= 70 && topCompetitor) {
+    return `You show up — but so does ${topCompetitor}, in answer after answer. When almost every answer already names brands, winning means becoming the recommendation, not just a mention. And this was only 3 questions, run once each.`;
   }
-  if (visibilityPct <= 30) {
-    return `And these were the friendly questions — we named ${brand} directly. On neutral buyer questions, where nobody types your name, the gap is usually wider.`;
+  if (topCompetitor) {
+    return `This was only 3 buyer questions, run once each — and ${topCompetitor} was already showing up ahead of ${brand}. The full audit runs 10 high-intent prompts, 3 times each, across all 5 assistants. That's where the real pattern shows.`;
   }
   if (opportunityPct >= 30) {
     return `${Math.round(opportunityPct)}% of these answers named no brand at all — open space a competitor will take first. And this was only 3 questions.`;
   }
-  return `This was only 3 questions, and the friendly ones at that. The real gaps show on neutral buyer prompts — that's what we fix.`;
+  return `This was only 3 questions, run once each. The full audit runs 10 high-intent prompts, 3 times each — that's where the real gaps show, and that's what we fix.`;
 }
 
 export default function FixCtaSection({
