@@ -15,7 +15,6 @@ import MethodSection from '@/components/pitch/MethodSection';
 import FounderSection from '@/components/pitch/FounderSection';
 import AgencyComparison from '@/components/pitch/AgencyComparison';
 import PricingSection from '@/components/pitch/PricingSection';
-import SocialProofSection from '@/components/pitch/SocialProofSection';
 import GuaranteeSection from '@/components/pitch/GuaranteeSection';
 import PitchFaqSection from '@/components/pitch/PitchFaqSection';
 import ClosingCta from '@/components/pitch/ClosingCta';
@@ -70,7 +69,6 @@ export default function PitchPage({ runId }: { runId: string }) {
       <MethodSection p={p} />
       <FounderSection p={p} />
       <AgencyComparison />
-      <SocialProofSection />
       <PricingSection p={p} />
       <GuaranteeSection />
       <PitchFaqSection />

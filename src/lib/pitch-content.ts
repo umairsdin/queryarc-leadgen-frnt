@@ -44,7 +44,32 @@ export const SPRINT = {
   ],
   note: "Final page count is confirmed on a quick call — nothing rigid to squeeze into.",
   cta: "Talk to us about the Sprint",
-  href: CHECKOUT.sprintContact,
+  // Sprint is consultative — the CTA books a 30-min call directly (cal.com).
+  href: CAL_BOOKING_URL,
+};
+
+/**
+ * Recurring monitoring tier — step four (Defend) after the Sprint.
+ * Kept in sync with the marketing site's Defense Plan. Consultative → "Talk to us".
+ */
+export const DEFENSE = {
+  name: "Defense Plan",
+  price: "$1,500",
+  cadence: "/month",
+  priceNote: "3-month minimum",
+  committedNote:
+    "$1,250/month on a 6-month commitment — priority turnaround + a quarterly review.",
+  quickDiff: "Keep the AI visibility you earned",
+  summary:
+    "Most Sprint clients stay on a Defense Plan to protect what moved. This is step four — Defend — after the Sprint.",
+  includes: [
+    "A monthly rerun of your exact audit",
+    "Drift alerts when AI assistants drop you or start surfacing a competitor",
+    "One fix cycle per month",
+    "A monthly memo",
+  ],
+  cta: "Talk to us about Defense",
+  href: CAL_BOOKING_URL,
 };
 
 /** Founder-led trust block. Built to expand into a team later (see `team`). */
@@ -128,45 +153,6 @@ export const METHOD = [
   },
 ];
 
-export const TESTIMONIALS = [
-  {
-    quote:
-      "Before working with Umair, we knew AI search mattered but had no clear path. The audit showed exactly where we were missing in ChatGPT-style answers and what needed to change.",
-    name: "Sophie Laurent",
-    title: "Head of Marketing, Paris, France",
-  },
-  {
-    quote:
-      "The biggest value was clarity. Instead of vague SEO advice, we got a practical plan our team in Berlin could actually execute.",
-    name: "Markus Weber",
-    title: "Founder, Berlin, Germany",
-  },
-  {
-    quote:
-      "Umair helped us understand why competitors were being mentioned and we were not. The recommendations were specific, commercial, and easy to prioritize.",
-    name: "Thomas De Smet",
-    title: "Commercial Director, Brussels, Belgium",
-  },
-  {
-    quote:
-      "This was the first time an audit connected SEO, content, and AI visibility in a way that made sense for our market.",
-    name: "Ana Ferreira",
-    title: "CMO, Lisbon, Portugal",
-  },
-  {
-    quote:
-      "The report gave us a clear view of where our brand was missing in AI-generated answers and what we needed to fix first.",
-    name: "James Whitaker",
-    title: "Business Development Lead, London, United Kingdom",
-  },
-  {
-    quote:
-      "The recommendations were not generic. They were based on how our market, competitors, and buyers actually show up in AI search.",
-    name: "Lars Jensen",
-    title: "Commercial Director, Copenhagen, Denmark",
-  },
-];
-
 /** Headline stats — factual / process-based (no fabricated outcome claims). */
 export const RESULT_STATS = [
   { value: "5", label: "AI assistants analyzed" },
@@ -174,13 +160,10 @@ export const RESULT_STATS = [
   { value: "1:1", label: "direct with Umair" },
 ];
 
-/** Client logos — empty until real assets exist (row hides when empty). */
-export const CLIENT_LOGOS: string[] = [];
-
 /** Risk reversal. Two distinct outcomes — no double-counting. */
 export const GUARANTEE = {
   title: "Specific findings, or you don't pay",
-  body: "Start the $199 Diagnostic risk-free. If your report doesn't give you specific, brand-level findings — the actual AI answers, where you're missing, and what to fix first — email within 14 days for a full refund. And if you move ahead, that $199 is 100% credited toward your Blueprint or Sprint within 14 days, so the diagnosis ends up costing you nothing.",
+  body: "14-day money-back guarantee. If your report doesn't give you specific, brand-level findings you can act on, email within 14 days for a full refund. We don't promise AI rankings — no one honestly can — but the report will be specific to your brand, and it's still 100% credited toward a Blueprint or Sprint if you move ahead.",
 };
 
 /** Founder-led capacity. Kept qualitative — no specific (unverifiable) number. */

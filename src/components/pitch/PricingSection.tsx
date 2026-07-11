@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle2, MessageCircle } from 'lucide-react';
-import { CHECKOUT, SPRINT, checkoutUrl } from '@/lib/pitch-content';
+import { CHECKOUT, SPRINT, DEFENSE, checkoutUrl } from '@/lib/pitch-content';
 import { Personalization } from '@/lib/pitch-personalization';
 
 export default function PricingSection({ p }: { p: Personalization }) {
@@ -25,7 +25,7 @@ export default function PricingSection({ p }: { p: Personalization }) {
           </p>
         </motion.div>
 
-        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {/* Diagnostic */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -104,7 +104,7 @@ export default function PricingSection({ p }: { p: Personalization }) {
               href={checkoutUrl(CHECKOUT.growth, p.brand, p.runId)}
               className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Get the {p.brand} Blueprint — $499
+              Get the {p.brand} Growth Blueprint — $499
               <ArrowRight className="h-4 w-4" />
             </a>
           </motion.div>
@@ -143,6 +143,42 @@ export default function PricingSection({ p }: { p: Personalization }) {
             >
               <MessageCircle className="h-4 w-4" />
               {SPRINT.cta}
+            </a>
+          </motion.div>
+
+          {/* Defense Plan — recurring monitoring, step four (Defend), talk to us */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="card-surface flex flex-col border-primary/30 bg-primary-light/70 p-6"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+              {DEFENSE.name}
+            </p>
+            <p className="mt-2 text-2xl font-bold leading-tight text-foreground sm:text-3xl">
+              {DEFENSE.price}
+              <span className="text-base font-medium text-muted-foreground">{DEFENSE.cadence}</span>
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">{DEFENSE.priceNote}</p>
+            <p className="mt-2 text-sm font-medium text-primary">{DEFENSE.quickDiff}</p>
+            <p className="mt-2 text-sm leading-snug text-muted-foreground">{DEFENSE.summary}</p>
+            <ul className="mt-5 flex-1 space-y-2.5">
+              {DEFENSE.includes.map((item) => (
+                <li key={item} className="flex items-start gap-2 text-sm text-foreground">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-xs italic text-muted-foreground">{DEFENSE.committedNote}</p>
+            <a
+              href={DEFENSE.href}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              <MessageCircle className="h-4 w-4" />
+              {DEFENSE.cta}
             </a>
           </motion.div>
         </div>

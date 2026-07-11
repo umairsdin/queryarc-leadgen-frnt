@@ -34,18 +34,12 @@ export default function PainSection({ p }: { p: Personalization }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mt-10 grid gap-4 sm:grid-cols-3"
+          className="mt-10 grid gap-4 sm:grid-cols-2"
         >
           <div className="card-surface p-5">
             <p className="text-3xl font-bold text-foreground">{p.questionsTested}</p>
             <p className="mt-1 text-sm text-muted-foreground">
               buyer questions tested — free
-            </p>
-          </div>
-          <div className="card-surface p-5">
-            <p className="text-3xl font-bold text-foreground">100s</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              of ways buyers actually ask {/* TODO: real number if available */}
             </p>
           </div>
           <div className="card-surface border-metric-red/30 bg-metric-red/5 p-5">
