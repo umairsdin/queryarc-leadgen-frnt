@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchRun } from '@/lib/api';
-import { displayPercent } from '@/lib/display-metrics';
+import { displayPercent, observedPercent } from '@/lib/display-metrics';
 import { CanonicalReport } from '@/types/report';
 import ReportHeader from '@/components/report/ReportHeader';
 import LoadingState from '@/components/report/LoadingState';
@@ -132,7 +132,7 @@ export default function ReportPage({ runId }: { runId: string }) {
                     brand={report.input.brand_name}
                     topCompetitor={report.summary.top_competitor}
                     visibilityPct={displayPercent(report.metrics.visibility_rate)}
-                    competitorPct={displayPercent(report.metrics.competitor_piggyback_rate)}
+                    competitorPct={observedPercent(report.metrics.competitor_piggyback_rate)}
                     opportunityPct={displayPercent(report.metrics.open_opportunity_rate)}
                     runId={runId || report.run.id}
                   />

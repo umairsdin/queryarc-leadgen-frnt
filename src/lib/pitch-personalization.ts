@@ -1,5 +1,5 @@
 import { CanonicalReport } from '@/types/report';
-import { displayPercent } from '@/lib/display-metrics';
+import { displayPercent, observedPercent } from '@/lib/display-metrics';
 
 /** The painful, real "AI recommended your competitor, not you" quote. */
 export interface AiQuote {
@@ -83,7 +83,7 @@ export function buildPersonalization(report: CanonicalReport, runId: string): Pe
     topCompetitor: pickTopCompetitor(report),
     competitors: report.input?.competitors || [],
     visibilityPct: displayPercent(m?.visibility_rate),
-    competitorPct: displayPercent(m?.competitor_piggyback_rate),
+    competitorPct: observedPercent(m?.competitor_piggyback_rate),
     opportunityPct: displayPercent(m?.open_opportunity_rate),
     visibilityCount: m?.visibility_rate?.count ?? 0,
     visibilityDenom: m?.visibility_rate?.denom ?? m?.visibility_rate?.total ?? 0,

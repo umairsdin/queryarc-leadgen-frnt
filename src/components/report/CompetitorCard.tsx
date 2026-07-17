@@ -5,7 +5,7 @@ import {
   CanonicalReport, CompetitorPresenceCard,
   PiggybackRow, EvidenceResource
 } from '@/types/report';
-import { displayAdjustmentNote, displayPercent } from '@/lib/display-metrics';
+import { observedPercent } from '@/lib/display-metrics';
 
 interface EvidenceExample {
   question_id: number;
@@ -80,7 +80,7 @@ export default function CompetitorCard({ report }: Props) {
   const evidence = report.resources?.evidence;
   const evidenceReady = isEvidenceAvailable(evidence);
 
-  const pct = displayPercent(overall);
+  const pct = observedPercent(overall);
   const count = overall ? (overall.count ?? overall.num ?? 0) : 0;
   const topRival = cp?.top_rival ?? fallback?.top_rival;
   const rows = cp?.rows ?? fallback?.rows;
@@ -146,9 +146,6 @@ export default function CompetitorCard({ report }: Props) {
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
             {count} of {overall.denom} eligible answers include a competitor
-          </p>
-          <p className="mt-1 text-[11px] text-muted-foreground/70">
-            {displayAdjustmentNote(report)}
           </p>
         </div>
 

@@ -19,6 +19,11 @@ export function displayPercent(metric?: MetricWithDisplay | null): number {
   return toPercent(metric.display_percent ?? metric.percent ?? metric.pct);
 }
 
+export function observedPercent(metric?: MetricWithDisplay | null): number {
+  if (!metric) return 0;
+  return toPercent(metric.percent ?? metric.pct ?? metric.display_percent);
+}
+
 export function displayAdjustmentNote(report: CanonicalReport): string {
   const note = report.metrics?.display_adjustment?.note;
   return typeof note === 'string' && note.trim() ? note : FALLBACK_DISPLAY_ADJUSTMENT_NOTE;
