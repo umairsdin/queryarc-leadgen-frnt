@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Eye, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { CanonicalReport, CompetitorVisibilityItem } from '@/types/report';
-import { displayAdjustmentNote, displayPercent } from '@/lib/display-metrics';
+import { displayPercent } from '@/lib/display-metrics';
 
 function getVisibilityColor(percent: number) {
   if (percent >= 60) return 'text-metric-green';
@@ -61,9 +61,6 @@ export default function VisibilityCard({ report }: { report: CanonicalReport }) 
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
             {vr.count} of {vr.denom ?? vr.total} answers mention {report.input.brand_name}
-          </p>
-          <p className="mt-1 text-[11px] text-muted-foreground/70">
-            {displayAdjustmentNote(report)}
           </p>
         </div>
 

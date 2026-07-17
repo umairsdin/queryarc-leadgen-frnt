@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronRight, Target } from 'lucide-react';
 import { CanonicalReport, OpportunityEvent } from '@/types/report';
-import { displayAdjustmentNote, displayPercent } from '@/lib/display-metrics';
+import { displayPercent } from '@/lib/display-metrics';
 
 interface Props {
   report: CanonicalReport;
@@ -47,9 +47,6 @@ export default function OpportunityCard({ report }: Props) {
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
             {or.count} of {or.denom ?? or.total} answers mention no brand
-          </p>
-          <p className="mt-1 text-[11px] text-muted-foreground/70">
-            {displayAdjustmentNote(report)}
           </p>
         </div>
 
