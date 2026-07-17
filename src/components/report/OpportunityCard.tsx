@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ChevronRight, Target } from 'lucide-react';
 import { CanonicalReport, OpportunityEvent } from '@/types/report';
+import { displayAdjustmentNote, displayPercent } from '@/lib/display-metrics';
 
 interface Props {
   report: CanonicalReport;
@@ -16,6 +17,7 @@ export default function OpportunityCard({ report }: Props) {
   const breakdown = report.data?.opportunity_model_breakdown as Record<string, number> | undefined
     ?? report.metrics?.opportunity_model_breakdown;
   if (!or) return null;
+  const pct = displayPercent(or);
 
   const handleEventToggle = (index: number) => {
     setExpandedEvent(expandedEvent === index ? null : index);
@@ -32,7 +34,7 @@ export default function OpportunityCard({ report }: Props) {
             </div>
             <h3 className="text-sm font-bold text-foreground">Open opportunity</h3>
           </div>
-          {or.percent > 0 && (
+          {(or.count ?? 0) > 0 && (
             <span className="rounded-full bg-metric-blue/10 px-2.5 py-1 text-[11px] font-semibold text-metric-blue">
               {or.count} unclaimed
             </span>
@@ -41,17 +43,20 @@ export default function OpportunityCard({ report }: Props) {
 
         <div className="mt-6">
           <div className="text-4xl font-bold tracking-tight text-metric-blue">
-            {or.percent}%
+            {pct}%
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
             {or.count} of {or.denom ?? or.total} answers mention no brand
+          </p>
+          <p className="mt-1 text-[11px] text-muted-foreground/70">
+            {displayAdjustmentNote(report)}
           </p>
         </div>
 
         <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-secondary">
           <motion.div
             initial={{ width: 0 }}
-            animate={{ width: `${or.percent}%` }}
+            animate={{ width: `${pct}%` }}
             transition={{ duration: 0.8, delay: 0.5 }}
             className="h-full rounded-full bg-metric-blue"
           />

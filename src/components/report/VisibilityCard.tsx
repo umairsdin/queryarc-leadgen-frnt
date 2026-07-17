@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Eye, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { CanonicalReport, CompetitorVisibilityItem } from '@/types/report';
+import { displayAdjustmentNote, displayPercent } from '@/lib/display-metrics';
 
 function getVisibilityColor(percent: number) {
   if (percent >= 60) return 'text-metric-green';
@@ -34,11 +35,12 @@ export default function VisibilityCard({ report }: { report: CanonicalReport }) 
   const topInsight = report.narratives?.top_insight;
   if (!vr) return null;
 
-  const TrendIcon = getTrendIcon(vr.percent);
+  const pct = displayPercent(vr);
+  const TrendIcon = getTrendIcon(pct);
 
   return (
     <div className="card-surface flex h-full flex-col overflow-hidden">
-      <div className={`h-1.5 w-full ${getBarBg(vr.percent)}`} />
+      <div className={`h-1.5 w-full ${getBarBg(pct)}`} />
       <div className="flex flex-col flex-1 p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -47,27 +49,30 @@ export default function VisibilityCard({ report }: { report: CanonicalReport }) 
             </div>
             <h3 className="text-sm font-bold text-foreground">Brand visibility</h3>
           </div>
-          <div className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ${getVisibilityBg(vr.percent)} ${getVisibilityColor(vr.percent)}`}>
+          <div className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ${getVisibilityBg(pct)} ${getVisibilityColor(pct)}`}>
             <TrendIcon className="h-3 w-3" />
-            {vr.percent >= 60 ? 'Strong' : vr.percent >= 30 ? 'Moderate' : 'Low'}
+            {pct >= 60 ? 'Strong' : pct >= 30 ? 'Moderate' : 'Low'}
           </div>
         </div>
 
         <div className="mt-6">
-          <div className={`text-4xl font-bold tracking-tight ${getVisibilityColor(vr.percent)}`}>
-            {vr.percent}%
+          <div className={`text-4xl font-bold tracking-tight ${getVisibilityColor(pct)}`}>
+            {pct}%
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
             {vr.count} of {vr.denom ?? vr.total} answers mention {report.input.brand_name}
+          </p>
+          <p className="mt-1 text-[11px] text-muted-foreground/70">
+            {displayAdjustmentNote(report)}
           </p>
         </div>
 
         <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-secondary">
           <motion.div
             initial={{ width: 0 }}
-            animate={{ width: `${vr.percent}%` }}
+            animate={{ width: `${pct}%` }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className={`h-full rounded-full ${getBarBg(vr.percent)}`}
+            className={`h-full rounded-full ${getBarBg(pct)}`}
           />
         </div>
 
@@ -96,17 +101,20 @@ export default function VisibilityCard({ report }: { report: CanonicalReport }) 
                   className="overflow-hidden"
                 >
                   <div className="mt-2 space-y-3 border-t border-border pt-4">
-                    {cv.map((c: CompetitorVisibilityItem, i: number) => (
-                      <div key={i} className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">{c.brand}</span>
-                        <div className="flex items-center gap-3">
-                          <div className="h-2 w-20 overflow-hidden rounded-full bg-secondary">
-                            <div className="h-full rounded-full bg-foreground/20" style={{ width: `${c.percent}%` }} />
+                    {cv.map((c: CompetitorVisibilityItem, i: number) => {
+                      const cPct = displayPercent(c);
+                      return (
+                        <div key={i} className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">{c.brand}</span>
+                          <div className="flex items-center gap-3">
+                            <div className="h-2 w-20 overflow-hidden rounded-full bg-secondary">
+                              <div className="h-full rounded-full bg-foreground/20" style={{ width: `${cPct}%` }} />
+                            </div>
+                            <span className="font-semibold text-foreground tabular-nums w-10 text-right">{cPct}%</span>
                           </div>
-                          <span className="font-semibold text-foreground tabular-nums w-10 text-right">{c.percent}%</span>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </motion.div>
               )}

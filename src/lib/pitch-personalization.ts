@@ -1,4 +1,5 @@
 import { CanonicalReport } from '@/types/report';
+import { displayPercent } from '@/lib/display-metrics';
 
 /** The painful, real "AI recommended your competitor, not you" quote. */
 export interface AiQuote {
@@ -22,12 +23,6 @@ export interface Personalization {
   answersAnalyzed: number;
   questionsTested: number;
   aiQuote?: AiQuote;
-}
-
-function roundPct(value: number | undefined | null): number {
-  if (value == null) return 0;
-  // Backend percents are on a 0–100 scale; guard a stray 0–1 fraction too.
-  return value > 1 || value === 0 ? Math.round(value) : Math.round(value * 100);
 }
 
 /** Trim a snippet to a readable length around the first competitor mention. */
@@ -87,9 +82,9 @@ export function buildPersonalization(report: CanonicalReport, runId: string): Pe
     website: report.input?.website || '',
     topCompetitor: pickTopCompetitor(report),
     competitors: report.input?.competitors || [],
-    visibilityPct: roundPct(m?.visibility_rate?.percent),
-    competitorPct: roundPct(m?.competitor_piggyback_rate?.percent ?? m?.competitor_piggyback_rate?.pct),
-    opportunityPct: roundPct(m?.open_opportunity_rate?.percent),
+    visibilityPct: displayPercent(m?.visibility_rate),
+    competitorPct: displayPercent(m?.competitor_piggyback_rate),
+    opportunityPct: displayPercent(m?.open_opportunity_rate),
     visibilityCount: m?.visibility_rate?.count ?? 0,
     visibilityDenom: m?.visibility_rate?.denom ?? m?.visibility_rate?.total ?? 0,
     answersAnalyzed: report.summary?.answers_analyzed ?? 0,

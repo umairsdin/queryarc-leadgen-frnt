@@ -5,6 +5,7 @@ import {
   CanonicalReport, CompetitorPresenceCard,
   PiggybackRow, EvidenceResource
 } from '@/types/report';
+import { displayAdjustmentNote, displayPercent } from '@/lib/display-metrics';
 
 interface EvidenceExample {
   question_id: number;
@@ -79,9 +80,7 @@ export default function CompetitorCard({ report }: Props) {
   const evidence = report.resources?.evidence;
   const evidenceReady = isEvidenceAvailable(evidence);
 
-  // Backend sends both `percent` and `pct` already on a 0–100 scale (e.g. 1/10 -> 10.0),
-  // so round directly — never multiply by 100 again (that produced the "1000%" bug).
-  const pct = overall ? Math.round(overall.percent ?? overall.pct ?? 0) : 0;
+  const pct = displayPercent(overall);
   const count = overall ? (overall.count ?? overall.num ?? 0) : 0;
   const topRival = cp?.top_rival ?? fallback?.top_rival;
   const rows = cp?.rows ?? fallback?.rows;
@@ -147,6 +146,9 @@ export default function CompetitorCard({ report }: Props) {
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
             {count} of {overall.denom} eligible answers include a competitor
+          </p>
+          <p className="mt-1 text-[11px] text-muted-foreground/70">
+            {displayAdjustmentNote(report)}
           </p>
         </div>
 

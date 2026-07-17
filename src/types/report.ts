@@ -51,6 +51,8 @@ export interface ReportSummary {
 
 export interface RateMetric {
   percent: number;
+  display_percent?: number;
+  observed_percent?: number;
   count: number;
   total?: number;
   denom?: number;
@@ -59,12 +61,16 @@ export interface RateMetric {
 export interface CompetitorVisibilityItem {
   brand: string;
   percent: number;
+  display_percent?: number;
+  observed_percent?: number;
   count: number;
 }
 
 export interface CompetitorPiggybackRate {
   percent?: number;
   pct?: number;
+  display_percent?: number;
+  observed_percent?: number;
   count?: number;
   num?: number;
   denom: number;
@@ -89,6 +95,12 @@ export interface ReportMetrics {
   open_opportunity_rate: RateMetric;
   competitor_visibility: CompetitorVisibilityItem[];
   opportunity_model_breakdown?: Record<string, number>;
+  display_adjustment?: {
+    note?: string;
+    floor_percent?: number;
+    ceiling_percent?: number;
+    reason?: string;
+  };
   [key: string]: unknown;
 }
 
@@ -96,7 +108,15 @@ export interface CompetitorPresenceCard {
   brand_question_id?: string;
   exclusion_applied?: boolean;
   eligible_answer_count?: number;
-  piggyback_overall: { pct?: number; num?: number; denom: number; percent?: number; count?: number };
+  piggyback_overall: {
+    pct?: number;
+    num?: number;
+    denom: number;
+    percent?: number;
+    display_percent?: number;
+    observed_percent?: number;
+    count?: number;
+  };
   rows?: PiggybackRow[];
   top_rival?: { competitor: string; assistants_count: number; assistants_denom: number };
 }
